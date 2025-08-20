@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Scale, User } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Navbar() {
@@ -19,13 +19,14 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav className="bg-white/95 backdrop-blur-sm shadow-lg sticky top-0 z-50 border-b border-primary/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <Scale className="h-8 w-8 text-blue-700" />
-              <span className="font-bold text-xl text-gray-900">LexConnect</span>
+            <Link href="/" className="flex items-center">
+              <span className="font-display text-2xl text-primary font-bold tracking-tight hover:text-accent transition-colors">
+                LexConnect
+              </span>
             </Link>
           </div>
 
@@ -35,7 +36,7 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-gray-600 hover:text-blue-700 transition-colors duration-200 font-medium"
+                className="text-gray-600 hover:text-primary transition-colors duration-200 font-medium"
               >
                 {item.label}
               </Link>
@@ -72,7 +73,7 @@ export default function Navbar() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-600 hover:text-blue-700"
+              className="text-gray-600 hover:text-primary"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -87,7 +88,7 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block px-3 py-2 text-gray-600 hover:text-blue-700 transition-colors"
+                  className="block px-3 py-2 text-gray-600 hover:text-primary transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
@@ -97,7 +98,7 @@ export default function Navbar() {
                 <div className="pt-4 space-y-2">
                   <Link
                     href="/dashboard"
-                    className="block px-3 py-2 text-gray-600 hover:text-blue-700"
+                    className="block px-3 py-2 text-gray-600 hover:text-primary"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Dashboard
@@ -107,7 +108,7 @@ export default function Navbar() {
                       logout();
                       setIsMenuOpen(false);
                     }}
-                    className="block w-full text-left px-3 py-2 text-gray-600 hover:text-blue-700"
+                    className="block w-full text-left px-3 py-2 text-gray-600 hover:text-primary"
                   >
                     Cerrar Sesión
                   </button>
@@ -116,14 +117,14 @@ export default function Navbar() {
                 <div className="pt-4 space-y-2">
                   <Link
                     href="/auth/login"
-                    className="block px-3 py-2 text-gray-600 hover:text-blue-700"
+                    className="block px-3 py-2 text-gray-600 hover:text-primary"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Iniciar Sesión
                   </Link>
                   <Link
                     href="/auth/register"
-                    className="block px-3 py-2 text-blue-700 font-medium"
+                    className="block px-3 py-2 text-primary font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Registrarse

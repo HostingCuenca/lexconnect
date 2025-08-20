@@ -4,16 +4,17 @@ import Link from 'next/link';
 
 export default function Hero() {
   return (
-    <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+    <section className="bg-brand-gradient text-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/10"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+            <div className="space-y-6">
+              <h1 className="text-4xl lg:text-6xl font-display leading-tight">
                 Servicios Legales
-                <span className="block text-yellow-400">Profesionales</span>
+                <span className="block text-secondary font-bold bg-gold-gradient bg-clip-text text-transparent">Profesionales</span>
               </h1>
-              <p className="text-xl text-blue-100 leading-relaxed">
+              <p className="text-xl text-white/90 leading-relaxed font-serif">
                 Plataforma integral para abogados y clientes. Encuentra servicios legales especializados, 
                 consulta nuestro blog jurídico y accede a recursos profesionales.
               </p>
@@ -21,13 +22,13 @@ export default function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/services">
-                <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-blue-900 font-semibold">
+                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-primary font-semibold shadow-lg hover:shadow-xl transition-all">
                   Explorar Servicios
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/auth/register">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-900">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary transition-all">
                   Registrarse Como Abogado
                 </Button>
               </Link>
@@ -35,19 +36,19 @@ export default function Hero() {
 
             <div className="grid grid-cols-3 gap-8 pt-8">
               <div className="text-center">
-                <Shield className="h-8 w-8 text-yellow-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold">500+</div>
-                <div className="text-blue-200 text-sm">Casos Exitosos</div>
+                <Shield className="h-8 w-8 text-secondary mx-auto mb-2" />
+                <div className="text-2xl font-bold text-white">500+</div>
+                <div className="text-white/70 text-sm">Casos Exitosos</div>
               </div>
               <div className="text-center">
-                <Award className="h-8 w-8 text-yellow-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold">50+</div>
-                <div className="text-blue-200 text-sm">Abogados Expertos</div>
+                <Award className="h-8 w-8 text-secondary mx-auto mb-2" />
+                <div className="text-2xl font-bold text-white">50+</div>
+                <div className="text-white/70 text-sm">Abogados Expertos</div>
               </div>
               <div className="text-center">
-                <Users className="h-8 w-8 text-yellow-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold">1000+</div>
-                <div className="text-blue-200 text-sm">Clientes Satisfechos</div>
+                <Users className="h-8 w-8 text-secondary mx-auto mb-2" />
+                <div className="text-2xl font-bold text-white">1000+</div>
+                <div className="text-white/70 text-sm">Clientes Satisfechos</div>
               </div>
             </div>
           </div>
@@ -59,7 +60,7 @@ export default function Hero() {
                 alt="Servicios Legales Profesionales"
                 className="rounded-lg shadow-2xl"
               />
-              <div className="absolute -bottom-6 -left-6 bg-yellow-400 text-blue-900 p-4 rounded-lg shadow-xl">
+              <div className="absolute -bottom-6 -left-6 bg-secondary text-primary p-4 rounded-lg shadow-xl">
                 <div className="font-bold text-lg">24/7</div>
                 <div className="text-sm">Consultas Disponibles</div>
               </div>

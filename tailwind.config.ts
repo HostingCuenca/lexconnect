@@ -9,10 +9,17 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'sans': ['TikTok Sans', 'system-ui', 'sans-serif'],
+        'serif': ['DM Serif Text', 'Georgia', 'serif'],
+        'display': ['Abril Fatface', 'serif'],
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'brand-gradient': 'linear-gradient(135deg, hsl(215 50% 15%) 0%, hsl(215 40% 25%) 50%, hsl(260 60% 45%) 100%)',
+        'gold-gradient': 'linear-gradient(135deg, hsl(45 85% 45%) 0%, hsl(45 85% 65%) 100%)',
       },
       borderRadius: {
         lg: 'var(--radius)',

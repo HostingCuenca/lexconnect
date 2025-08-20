@@ -1,3 +1,5 @@
+import 'server-only';
+
 export interface SitemapEntry {
   url: string;
   lastModified: Date;

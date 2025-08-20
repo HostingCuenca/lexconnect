@@ -1,3 +1,4 @@
+import 'server-only';
 import { Pool, PoolClient } from 'pg';
 
 // Configuración de la base de datos
@@ -8,24 +9,57 @@ const dbConfig = {
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'AgroCursos2025',
   ssl: false, // Cambiar a true si el servidor requiere SSL
-  max: 20, // Máximo número de conexiones en el pool
+  max: 10, // Reducido para evitar exceso de conexiones
+  min: 0, // Permitir 0 conexiones mínimas
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 5000, // Aumentado timeout
+  acquireTimeoutMillis: 60000, // Timeout para obtener conexión del pool
+  createTimeoutMillis: 10000, // Timeout para crear nueva conexión
 };
 
 // Pool de conexiones global
 let pool: Pool | null = null;
+let isInitializing = false;
 
 // Función para obtener el pool de conexiones
 export function getPool(): Pool {
-  if (!pool) {
-    pool = new Pool(dbConfig);
-    
-    // Manejar errores del pool
-    pool.on('error', (err) => {
-      console.error('Error en el pool de PostgreSQL:', err);
-    });
+  if (!pool && !isInitializing) {
+    isInitializing = true;
+    try {
+      pool = new Pool(dbConfig);
+      
+      // Manejar errores del pool
+      pool.on('error', (err) => {
+        console.error('Error en el pool de PostgreSQL:', err);
+        // Reiniciar pool en caso de error crítico
+        if (err.message.includes('ECONNREFUSED') || err.message.includes('ETIMEDOUT')) {
+          console.log('Reiniciando pool de conexiones...');
+          pool = null;
+        }
+      });
+
+      // Manejar conexiones perdidas
+      pool.on('connect', () => {
+        console.log('Nueva conexión establecida con PostgreSQL');
+      });
+
+      // Manejar desconexiones
+      pool.on('remove', () => {
+        console.log('Conexión removida del pool');
+      });
+      
+    } catch (error) {
+      console.error('Error inicializando pool:', error);
+      pool = null;
+    } finally {
+      isInitializing = false;
+    }
   }
+  
+  if (!pool) {
+    throw new Error('No se pudo establecer conexión con la base de datos');
+  }
+  
   return pool;
 }
 

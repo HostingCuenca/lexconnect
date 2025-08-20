@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Scale, Mail, Lock } from 'lucide-react';
+import { Mail, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
@@ -32,14 +32,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-brand-gradient flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Scale className="h-8 w-8 text-yellow-400" />
-            <span className="font-bold text-2xl text-white">LexConnect</span>
+          <div className="flex items-center justify-center mb-4">
+            <h1 className="font-display text-4xl text-secondary font-bold tracking-tight">
+              LexConnect
+            </h1>
           </div>
-          <h1 className="text-white text-lg">Accede a tu cuenta</h1>
+          <p className="text-white/80 text-lg font-serif">Accede a tu cuenta</p>
         </div>
 
         <Card className="shadow-2xl">
@@ -86,7 +87,7 @@ export default function LoginPage() {
               <div className="flex items-center justify-between">
                 <Link 
                   href="/auth/forgot-password"
-                  className="text-sm text-blue-600 hover:underline"
+                  className="text-sm text-accent hover:underline"
                 >
                   ¿Olvidaste tu contraseña?
                 </Link>
@@ -97,10 +98,34 @@ export default function LoginPage() {
               </Button>
             </form>
 
+            {/* Development: Admin credentials */}
+            <div className="mt-4 p-3 bg-gray-50 rounded-lg border">
+              <p className="text-xs font-medium text-gray-700 mb-2">Credenciales de desarrollo:</p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-600">Admin:</span>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setEmail('lexconnectadmin@lexconnect.mx');
+                      setPassword('admin123');
+                    }}
+                    className="text-xs bg-secondary/20 hover:bg-secondary/30 text-secondary px-2 py-1 rounded"
+                  >
+                    Usar credenciales
+                  </button>
+                </div>
+                <div className="text-xs text-gray-500">
+                  Email: lexconnectadmin@lexconnect.mx<br />
+                  Password: admin123
+                </div>
+              </div>
+            </div>
+
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 ¿No tienes una cuenta?{' '}
-                <Link href="/auth/register" className="text-blue-600 hover:underline font-medium">
+                <Link href="/auth/register" className="text-accent hover:underline font-medium">
                   Regístrate aquí
                 </Link>
               </p>

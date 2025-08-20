@@ -242,9 +242,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
 // Hook para peticiones autenticadas
 export function useAuthenticatedFetch() {
-  const { token, logout } = useAuth();
+  const { token, logout, loading } = useAuth();
 
   return async (url: string, options: RequestInit = {}) => {
+    // Wait for auth to load if it's still loading
+    if (loading) {
+      throw new Error('Autenticación cargando...');
+    }
+    
     if (!token) {
       throw new Error('No hay token de autenticación');
     }
