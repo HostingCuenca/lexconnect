@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // output: 'export', // Comentado para desarrollo - descomentar solo para build de producción
   trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: true,

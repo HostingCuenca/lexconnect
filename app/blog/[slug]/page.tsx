@@ -171,6 +171,12 @@ La constitución de empresas en México nunca había sido tan accesible. Las nue
   }
 ];
 
+export async function generateStaticParams() {
+  return blogPosts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
 interface BlogPostPageProps {
   params: {
     slug: string;
