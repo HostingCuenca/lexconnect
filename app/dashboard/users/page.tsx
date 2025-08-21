@@ -27,8 +27,23 @@ import {
   User as UserIcon,
   Calendar,
   Mail,
-  Phone
+  Phone,
+  Plus,
+  Edit,
+  Trash2
 } from 'lucide-react';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import Link from 'next/link';
 
 interface User {
   id: string;
@@ -70,6 +85,8 @@ export default function UsersManagementPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState<string>('all');
   const [loadingUsers, setLoadingUsers] = useState(true);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [deletingUser, setDeletingUser] = useState(false);
 
   useEffect(() => {
     if (!loading && (!user || user.role !== 'administrador')) {
@@ -88,16 +105,17 @@ export default function UsersManagementPage() {
       const response = await authFetch('/api/admin/users');
       
       if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users);
+        const result = await response.json();
+        const users = result.data?.users || [];
+        setUsers(users);
         
         // Calcular estadísticas
-        const total = data.users.length;
-        const active = data.users.filter((u: User) => u.is_active).length;
+        const total = users.length;
+        const active = users.filter((u: User) => u.is_active).length;
         const inactive = total - active;
-        const clientes = data.users.filter((u: User) => u.role === 'cliente').length;
-        const abogados = data.users.filter((u: User) => u.role === 'abogado').length;
-        const administradores = data.users.filter((u: User) => u.role === 'administrador').length;
+        const clientes = users.filter((u: User) => u.role === 'cliente').length;
+        const abogados = users.filter((u: User) => u.role === 'abogado').length;
+        const administradores = users.filter((u: User) => u.role === 'administrador').length;
         
         setStats({
           total,
@@ -107,9 +125,14 @@ export default function UsersManagementPage() {
           abogados,
           administradores
         });
+      } else {
+        const result = await response.json();
+        console.error('Error loading users:', result.message);
+        setUsers([]); // Fallback a array vacío
       }
     } catch (error) {
       console.error('Error fetching users:', error);
+      setUsers([]); // Fallback a array vacío
     } finally {
       setLoadingUsers(false);
     }
@@ -127,6 +150,30 @@ export default function UsersManagementPage() {
       }
     } catch (error) {
       console.error('Error updating user status:', error);
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+    
+    setDeletingUser(true);
+    try {
+      const response = await authFetch(`/api/admin/users/${userToDelete.id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        await fetchUsers(); // Refresh the list
+        setUserToDelete(null);
+      } else {
+        const result = await response.json();
+        alert(result.message || 'Error al eliminar usuario');
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Error de conexión al eliminar usuario');
+    } finally {
+      setDeletingUser(false);
     }
   };
 
@@ -156,7 +203,7 @@ export default function UsersManagementPage() {
     }
   };
 
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = (users || []).filter(user => {
     const matchesSearch = user.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase());
@@ -176,11 +223,19 @@ export default function UsersManagementPage() {
     <DashboardLayout>
       <div className="space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gestión de Usuarios</h1>
-          <p className="text-gray-600">
-            Administra todos los usuarios de la plataforma LexConnect
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Gestión de Usuarios</h1>
+            <p className="text-gray-600">
+              Administra todos los usuarios de la plataforma LexConnect
+            </p>
+          </div>
+          <Link href="/dashboard/users/create">
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Crear Usuario
+            </Button>
+          </Link>
         </div>
 
         {/* Stats Cards */}
@@ -356,14 +411,61 @@ export default function UsersManagementPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Button
-                            onClick={() => toggleUserStatus(userItem.id, userItem.is_active)}
-                            variant={userItem.is_active ? "destructive" : "default"}
-                            size="sm"
-                            className="mr-2"
-                          >
-                            {userItem.is_active ? 'Desactivar' : 'Activar'}
-                          </Button>
+                          <div className="flex items-center space-x-2">
+                            <Link href={`/dashboard/users/${userItem.id}/edit`}>
+                              <Button variant="outline" size="sm">
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </Link>
+                            
+                            <Button
+                              onClick={() => toggleUserStatus(userItem.id, userItem.is_active)}
+                              variant={userItem.is_active ? "destructive" : "default"}
+                              size="sm"
+                            >
+                              {userItem.is_active ? 'Desactivar' : 'Activar'}
+                            </Button>
+                            
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button 
+                                  variant="destructive" 
+                                  size="sm"
+                                  onClick={() => setUserToDelete(userItem)}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>¿Eliminar usuario?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Esta acción eliminará permanentemente a <strong>{userItem.first_name} {userItem.last_name}</strong> ({userItem.email}).
+                                    <br /><br />
+                                    Si el usuario tiene datos asociados (consultas, pagos, etc.), la eliminación fallará.
+                                    En ese caso, considera desactivar el usuario en su lugar.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel onClick={() => setUserToDelete(null)}>Cancelar</AlertDialogCancel>
+                                  <AlertDialogAction 
+                                    onClick={handleDeleteUser}
+                                    disabled={deletingUser}
+                                    className="bg-red-600 hover:bg-red-700"
+                                  >
+                                    {deletingUser ? (
+                                      <>
+                                        <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
+                                        Eliminando...
+                                      </>
+                                    ) : (
+                                      'Eliminar'
+                                    )}
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}

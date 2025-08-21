@@ -202,7 +202,7 @@ export default function ContactPage() {
               Nuestra Ubicación
             </h2>
             <p className="text-gray-600">
-              Visítanos en nuestra oficina principal en el corazón de la Ciudad de México
+              Visítanos en nuestra oficina principal en el corazón de Quito
             </p>
           </div>
           

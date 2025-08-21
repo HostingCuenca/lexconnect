@@ -10,7 +10,7 @@ Esta guía proporciona patrones, mejores prácticas y flujos de trabajo claros p
 - **Base de Datos**: PostgreSQL con conexión directa
 - **Autenticación**: JWT con localStorage + httpOnly cookies
 - **UI**: Tailwind CSS + shadcn/ui
-- **Idioma**: Español (aplicación legal mexicana)
+- **Idioma**: Español (aplicación legal ecuatoriana)
 
 ### Arquitectura de Roles
 ```typescript

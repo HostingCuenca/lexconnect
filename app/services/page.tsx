@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,117 +9,117 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { 
-  Gavel, 
-  Home, 
-  Briefcase, 
-  Users, 
-  FileText, 
-  Car,
   Search,
   Filter,
   Star,
   MapPin,
-  Clock
+  Clock,
+  DollarSign,
+  User,
+  Award
 } from 'lucide-react';
 
-const allServices = [
-  {
-    id: 1,
-    title: 'Consulta Legal Especializada',
-    description: 'Asesoría personalizada en derecho civil con más de 10 años de experiencia.',
-    lawyer: 'Dra. María González',
-    rating: 4.9,
-    reviews: 127,
-    price: 200,
-    duration: '60 min',
-    location: 'CDMX',
-    category: 'Derecho Civil',
-    image: 'https://images.pexels.com/photos/5668856/pexels-photo-5668856.jpeg?auto=compress&cs=tinysrgb&w=400',
-    available: true
-  },
-  {
-    id: 2,
-    title: 'Defensa Penal Especializada',
-    description: 'Representación legal en casos penales con amplia experiencia en tribunales.',
-    lawyer: 'Lic. Carlos Ruiz',
-    rating: 4.8,
-    reviews: 89,
-    price: 350,
-    duration: '90 min',
-    location: 'Guadalajara',
-    category: 'Derecho Penal',
-    image: 'https://images.pexels.com/photos/5668772/pexels-photo-5668772.jpeg?auto=compress&cs=tinysrgb&w=400',
-    available: true
-  },
-  {
-    id: 3,
-    title: 'Constitución de Empresas',
-    description: 'Servicio completo para la creación y registro de sociedades comerciales.',
-    lawyer: 'Dr. Roberto Martín',
-    rating: 4.7,
-    reviews: 156,
-    price: 500,
-    duration: '120 min',
-    location: 'Monterrey',
-    category: 'Derecho Comercial',
-    image: 'https://images.pexels.com/photos/5668473/pexels-photo-5668473.jpeg?auto=compress&cs=tinysrgb&w=400',
-    available: true
-  },
-  {
-    id: 4,
-    title: 'Asesoría Inmobiliaria',
-    description: 'Revisión de contratos de compraventa y arrendamiento de propiedades.',
-    lawyer: 'Lic. Ana Herrera',
-    rating: 4.6,
-    reviews: 73,
-    price: 180,
-    duration: '45 min',
-    location: 'CDMX',
-    category: 'Derecho Inmobiliario',
-    image: 'https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg?auto=compress&cs=tinysrgb&w=400',
-    available: false
-  },
-  {
-    id: 5,
-    title: 'Derecho Laboral y Despidos',
-    description: 'Defensa de derechos laborales y representación en casos de despido.',
-    lawyer: 'Dr. Luis Fernández',
-    rating: 4.9,
-    reviews: 201,
-    price: 280,
-    duration: '75 min',
-    location: 'Puebla',
-    category: 'Derecho Laboral',
-    image: 'https://images.pexels.com/photos/5668792/pexels-photo-5668792.jpeg?auto=compress&cs=tinysrgb&w=400',
-    available: true
-  },
-  {
-    id: 6,
-    title: 'Accidentes de Tránsito',
-    description: 'Representación especializada en casos de accidentes vehiculares.',
-    lawyer: 'Lic. Patricia Vega',
-    rating: 4.8,
-    reviews: 94,
-    price: 300,
-    duration: '60 min',
-    location: 'CDMX',
-    category: 'Seguros y Accidentes',
-    image: 'https://images.pexels.com/photos/5668800/pexels-photo-5668800.jpeg?auto=compress&cs=tinysrgb&w=400',
-    available: true
-  }
-];
+interface LawyerService {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  duration_minutes: number;
+  service_type: string;
+}
 
-const categories = [
-  'Todos',
-  'Derecho Civil',
-  'Derecho Penal',
-  'Derecho Comercial',
-  'Derecho Inmobiliario',
-  'Derecho Laboral',
-  'Seguros y Accidentes'
-];
+interface LawyerProfile {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  bio: string;
+  years_experience: number;
+  rating: number;
+  total_reviews: number;
+  office_address: string;
+  languages: string;
+  is_verified: boolean;
+  specialties: Array<{
+    id: string;
+    name: string;
+    icon: string;
+  }>;
+  services: LawyerService[];
+}
+
+interface LegalSpecialty {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+}
 
 export default function ServicesPage() {
+  const [lawyers, setLawyers] = useState<LawyerProfile[]>([]);
+  const [specialties, setSpecialties] = useState<LegalSpecialty[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSpecialty, setSelectedSpecialty] = useState('all');
+
+  // Fetch lawyers and specialties
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch lawyers and specialties in parallel
+      const [lawyersResponse, specialtiesResponse] = await Promise.all([
+        fetch('/api/lawyers/'),
+        fetch('/api/legal-specialties/')
+      ]);
+
+      if (lawyersResponse.ok) {
+        const lawyersData = await lawyersResponse.json();
+        setLawyers(lawyersData.data || []);
+      }
+
+      if (specialtiesResponse.ok) {
+        const specialtiesData = await specialtiesResponse.json();
+        setSpecialties(specialtiesData.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Search lawyers
+  const searchLawyers = async () => {
+    try {
+      setLoading(true);
+      
+      const params = new URLSearchParams();
+      if (searchTerm) params.append('search', searchTerm);
+      if (selectedSpecialty && selectedSpecialty !== 'all') params.append('specialty', selectedSpecialty);
+      
+      const response = await fetch(`/api/lawyers/?${params.toString()}`);
+      if (response.ok) {
+        const data = await response.json();
+        setLawyers(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error searching lawyers:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Get main service for display
+  const getMainService = (services: LawyerService[]) => {
+    return services.find(s => s.service_type === 'consultation') || services[0];
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -129,7 +132,7 @@ export default function ServicesPage() {
               Servicios Legales Especializados
             </h1>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Encuentra el abogado perfecto para tu caso. Más de 50 especialistas disponibles.
+              Encuentra el abogado perfecto para tu caso. {lawyers.length} especialistas verificados disponibles.
             </p>
           </div>
         </div>
@@ -142,112 +145,138 @@ export default function ServicesPage() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Buscar servicios legales..."
+                placeholder="Buscar abogados por nombre o especialidad..."
                 className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && searchLawyers()}
               />
             </div>
             <div className="flex gap-4">
-              <Select>
+              <Select value={selectedSpecialty} onValueChange={setSelectedSpecialty}>
                 <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Categoría" />
+                  <SelectValue placeholder="Especialidad" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category.toLowerCase()}>
-                      {category}
+                  <SelectItem value="all">Todas las especialidades</SelectItem>
+                  {specialties.map((specialty) => (
+                    <SelectItem key={specialty.id} value={specialty.id}>
+                      {specialty.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <Select>
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Ubicación" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="cdmx">Ciudad de México</SelectItem>
-                  <SelectItem value="guadalajara">Guadalajara</SelectItem>
-                  <SelectItem value="monterrey">Monterrey</SelectItem>
-                  <SelectItem value="puebla">Puebla</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button variant="outline">
+              <Button onClick={searchLawyers} disabled={loading}>
                 <Filter className="h-4 w-4 mr-2" />
-                Filtros
+                Buscar
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Services Grid */}
+      {/* Results Section */}
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {allServices.map((service) => (
-              <Card key={service.id} className="h-full hover:shadow-lg transition-all duration-300 group">
-                <div className="aspect-video overflow-hidden rounded-t-lg">
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <CardHeader>
-                  <div className="flex justify-between items-start mb-2">
-                    <Badge variant="outline" className="text-xs">
-                      {service.category}
-                    </Badge>
-                    {!service.available && (
-                      <Badge variant="destructive" className="text-xs">
-                        No Disponible
-                      </Badge>
-                    )}
-                  </div>
-                  <CardTitle className="text-xl group-hover:text-blue-700 transition-colors">
-                    {service.title}
-                  </CardTitle>
-                  <CardDescription className="text-gray-600">
-                    {service.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                      <span className="font-medium">{service.rating}</span>
-                      <span className="text-gray-500">({service.reviews})</span>
-                    </div>
-                    <div className="flex items-center space-x-1 text-gray-500">
-                      <Clock className="h-4 w-4" />
-                      <span>{service.duration}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-gray-900">{service.lawyer}</p>
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Cargando abogados...</p>
+            </div>
+          ) : lawyers.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <User className="h-12 w-12 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron abogados</h3>
+              <p className="text-gray-600">Intenta ajustar tus filtros de búsqueda</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {lawyers.map((lawyer) => {
+                const mainService = getMainService(lawyer.services);
+                if (!mainService) return null;
+
+                return (
+                  <Card key={lawyer.id} className="h-full hover:shadow-lg transition-all duration-300 group">
+                    <CardHeader>
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex items-center space-x-2">
+                          {lawyer.specialties.map((specialty) => (
+                            <Badge key={specialty.id} variant="outline" className="text-xs">
+                              {specialty.name}
+                            </Badge>
+                          ))}
+                        </div>
+                        {lawyer.is_verified && (
+                          <Badge className="bg-green-100 text-green-800 text-xs">
+                            <Award className="h-3 w-3 mr-1" />
+                            Verificado
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      <CardTitle className="text-xl group-hover:text-blue-700 transition-colors">
+                        {mainService.title}
+                      </CardTitle>
+                      <CardDescription className="text-gray-600">
+                        {mainService.description}
+                      </CardDescription>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-4">
+                      {/* Lawyer Info */}
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="font-medium text-gray-900">
+                            {lawyer.first_name} {lawyer.last_name}
+                          </p>
+                          <div className="flex items-center space-x-4 text-sm text-gray-500">
+                            <span>{lawyer.years_experience} años exp.</span>
+                            <span>•</span>
+                            <span>{lawyer.languages}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Rating and Reviews */}
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center space-x-1">
+                          <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                          <span className="font-medium">{Number(lawyer.rating || 0).toFixed(1)}</span>
+                          <span className="text-gray-500">({lawyer.total_reviews} reseñas)</span>
+                        </div>
+                        <div className="flex items-center space-x-1 text-gray-500">
+                          <Clock className="h-4 w-4" />
+                          <span>{mainService.duration_minutes} min</span>
+                        </div>
+                      </div>
+
+                      {/* Location */}
                       <div className="flex items-center space-x-1 text-sm text-gray-500">
                         <MapPin className="h-3 w-3" />
-                        <span>{service.location}</span>
+                        <span className="truncate">{lawyer.office_address}</span>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-green-600">
-                        ${service.price}
+                      
+                      {/* Price and Action */}
+                      <div className="flex justify-between items-center pt-4 border-t">
+                        <div className="flex items-center space-x-1 text-2xl font-bold text-green-600">
+                          <DollarSign className="h-6 w-6" />
+                          <span>{Number(mainService.price).toFixed(0)}</span>
+                        </div>
+                        <Button 
+                          className="group-hover:bg-blue-700"
+                          onClick={() => window.location.href = `/lawyers/${lawyer.id}`}
+                        >
+                          Ver Perfil
+                        </Button>
                       </div>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    className="w-full" 
-                    disabled={!service.available}
-                  >
-                    {service.available ? 'Contratar Servicio' : 'No Disponible'}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

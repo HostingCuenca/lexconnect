@@ -8,7 +8,7 @@ import {
   isValidEmail,
   validatePassword,
   validateName,
-  validateMexicanPhone,
+  validateEcuadorianPhone,
   isValidRole,
   checkRateLimit,
   sanitizeUser,
@@ -32,14 +32,14 @@ export async function POST(request: NextRequest) {
 
     console.log(`📝 Intento de registro para: ${email} como ${role}`);
 
-    // Rate limiting por IP
-    const clientIP = request.headers.get('x-forwarded-for') || 
-                    request.headers.get('x-real-ip') || 
-                    'unknown';
+    // Rate limiting deshabilitado para desarrollo
+    // const clientIP = request.headers.get('x-forwarded-for') || 
+    //                 request.headers.get('x-real-ip') || 
+    //                 'unknown';
 
-    if (!checkRateLimit(`register:${clientIP}`, 3, 60 * 60 * 1000)) {
-      return createAuthError('Demasiados intentos de registro. Intenta de nuevo en 1 hora.', 429);
-    }
+    // if (!checkRateLimit(`register:${clientIP}`, 3, 60 * 60 * 1000)) {
+    //   return createAuthError('Demasiados intentos de registro. Intenta de nuevo en 1 hora.', 429);
+    // }
 
     // Validaciones básicas
     if (!email || !password || !confirmPassword || !firstName || !lastName) {
@@ -51,19 +51,18 @@ export async function POST(request: NextRequest) {
       return createAuthError('Formato de email inválido', 400);
     }
 
-    // Validación de nombres
-    if (!validateName(firstName)) {
-      return createAuthError('Nombre inválido. Debe tener al menos 2 caracteres y solo letras', 400);
+    // Validaciones simplificadas
+    if (firstName.trim().length < 2) {
+      return createAuthError('El nombre debe tener al menos 2 caracteres', 400);
     }
 
-    if (!validateName(lastName)) {
-      return createAuthError('Apellido inválido. Debe tener al menos 2 caracteres y solo letras', 400);
+    if (lastName.trim().length < 2) {
+      return createAuthError('El apellido debe tener al menos 2 caracteres', 400);
     }
 
-    // Validación de contraseña
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-      return createAuthError(passwordValidation.errors.join('. '), 400);
+    // Validación básica de contraseña
+    if (password.length < 4) {
+      return createAuthError('La contraseña debe tener al menos 4 caracteres', 400);
     }
 
     // Confirmar contraseña
@@ -71,10 +70,8 @@ export async function POST(request: NextRequest) {
       return createAuthError('Las contraseñas no coinciden', 400);
     }
 
-    // Validación de teléfono (opcional)
-    if (phone && !validateMexicanPhone(phone)) {
-      return createAuthError('Formato de teléfono inválido. Usa formato mexicano: +52 xxx xxx xxxx', 400);
-    }
+    // Validación de teléfono simplificada (opcional)
+    // Sin validaciones estrictas de formato durante desarrollo
 
     // Validación de rol
     if (!isValidRole(role)) {

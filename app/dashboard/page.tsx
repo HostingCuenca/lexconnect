@@ -93,7 +93,7 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
-            Bienvenido, {user.name}
+            Bienvenido, {user.first_name} {user.last_name}
           </h1>
           <p className="text-gray-600">
             Aquí tienes un resumen de tu actividad reciente en la plataforma.

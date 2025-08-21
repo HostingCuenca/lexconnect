@@ -12,6 +12,7 @@ export default function Navbar() {
 
   const menuItems = [
     { href: '/', label: 'Inicio' },
+    { href: '/lawyers', label: 'Directorio' },
     { href: '/services', label: 'Servicios' },
     { href: '/blog', label: 'Blog' },
     { href: '/about', label: 'Nosotros' },

@@ -16,18 +16,45 @@ import {
   LogOut,
   User,
   ShoppingCart,
-  BookOpen
+  BookOpen,
+  Briefcase,
+  Shield
 } from 'lucide-react';
 
-const navigationItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: Home },
-  { href: '/dashboard/services', label: 'Mis Servicios', icon: FileText },
-  { href: '/dashboard/clients', label: 'Clientes', icon: Users },
-  { href: '/dashboard/ecommerce', label: 'E-commerce', icon: ShoppingCart },
-  { href: '/dashboard/blog', label: 'Blog', icon: BookOpen },
-  { href: '/dashboard/payments', label: 'Pagos', icon: DollarSign },
-  { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
-];
+const getNavigationItems = (userRole: string) => {
+  const baseItems = [
+    { href: '/dashboard', label: 'Dashboard', icon: Home },
+    { href: '/dashboard/services', label: 'Mis Servicios', icon: FileText },
+    { href: '/dashboard/payments', label: 'Pagos', icon: DollarSign },
+  ];
+
+  if (userRole === 'administrador') {
+    return [
+      ...baseItems,
+      { href: '/dashboard/lawyers', label: 'Administrar Abogados', icon: Briefcase },
+      { href: '/dashboard/users', label: 'Usuarios', icon: Users },
+      { href: '/dashboard/blog', label: 'Blog', icon: BookOpen },
+      { href: '/dashboard/ecommerce', label: 'E-commerce', icon: ShoppingCart },
+      { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
+    ];
+  }
+
+  if (userRole === 'abogado') {
+    return [
+      ...baseItems,
+      { href: '/dashboard/clients', label: 'Clientes', icon: Users },
+      { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
+    ];
+  }
+
+  // Cliente
+  return [
+    { href: '/dashboard', label: 'Dashboard', icon: Home },
+    { href: '/dashboard/consultations', label: 'Mis Consultas', icon: FileText },
+    { href: '/dashboard/payments', label: 'Pagos', icon: DollarSign },
+    { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
+  ];
+};
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -40,6 +67,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   if (!user) {
     return null;
   }
+
+  const navigationItems = getNavigationItems(user.role);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -86,7 +115,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="flex-shrink-0 group block">
               <div className="flex items-center">
                 <div className="ml-3">
-                  <p className="text-base font-medium text-gray-700">{user.name}</p>
+                  <p className="text-base font-medium text-gray-700">{user.first_name} {user.last_name}</p>
                   <p className="text-sm font-medium text-gray-500 capitalize">{user.role}</p>
                 </div>
               </div>
@@ -126,7 +155,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <User className="h-8 w-8 text-gray-400" />
               </div>
               <div className="ml-3 flex-1">
-                <p className="text-sm font-medium text-gray-700">{user.name}</p>
+                <p className="text-sm font-medium text-gray-700">{user.first_name} {user.last_name}</p>
                 <p className="text-xs font-medium text-gray-500 capitalize">{user.role}</p>
               </div>
               <Button

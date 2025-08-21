@@ -187,9 +187,9 @@ export function validateName(name: string): boolean {
   return name.trim().length >= 2 && /^[a-zA-ZÀ-ÿñÑ\s]+$/.test(name);
 }
 
-// Función para validar teléfono mexicano
-export function validateMexicanPhone(phone: string): boolean {
-  // Formato: +52 xxx xxx xxxx o xxx xxx xxxx
-  const phoneRegex = /^(\+52\s?)?[0-9]{3}\s?[0-9]{3}\s?[0-9]{4}$/;
+// Función para validar teléfono ecuatoriano
+export function validateEcuadorianPhone(phone: string): boolean {
+  // Formato: +593 xxx xxx xxxx o xxx xxx xxxx (Ecuador)
+  const phoneRegex = /^(\+593\s?)?[0-9]{3}\s?[0-9]{3}\s?[0-9]{4}$/;
   return phoneRegex.test(phone.replace(/\s/g, ''));
 }
