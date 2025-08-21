@@ -87,13 +87,15 @@ export default function BlogClient({ initialPosts, categories }: BlogClientProps
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-brand-gradient text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-brand-gradient text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary/10"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-display mb-4">
-              Blog Jurídico <span className="text-secondary">LexConnect</span>
+            <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
+              Blog Jurídico{' '}
+              <span className="text-secondary">LexConnect</span>
             </h1>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto font-serif">
+            <p className="text-xl text-white/90 max-w-2xl mx-auto font-sans">
               Análisis legal, noticias jurídicas y guías prácticas de nuestros expertos.
             </p>
             <div className="mt-6 inline-flex items-center px-4 py-2 bg-secondary/20 rounded-full text-sm">

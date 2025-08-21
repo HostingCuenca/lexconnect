@@ -54,9 +54,9 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
 
   // Fetch the blog post data
   useEffect(() => {
-    if (!authLoading && user && user.role === 'administrador') {
+    if (!authLoading && user && (user.role === 'administrador' || user.role === 'abogado')) {
       fetchBlogPost();
-    } else if (!authLoading && (!user || user.role !== 'administrador')) {
+    } else if (!authLoading && (!user || (user.role !== 'administrador' && user.role !== 'abogado'))) {
       setLoading(false);
     }
   }, [authLoading, user, params.id]);
@@ -237,13 +237,13 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
     );
   }
 
-  // Show access denied if not admin
-  if (!user || user.role !== 'administrador') {
+  // Show access denied if not admin or lawyer
+  if (!user || (user.role !== 'administrador' && user.role !== 'abogado')) {
     return (
       <DashboardLayout>
         <div className="text-center py-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Acceso Denegado</h2>
-          <p className="text-gray-600">Solo los administradores pueden editar artículos.</p>
+          <p className="text-gray-600">Solo los administradores y abogados pueden editar artículos.</p>
         </div>
       </DashboardLayout>
     );

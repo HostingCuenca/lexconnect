@@ -5,16 +5,16 @@ import Link from 'next/link';
 export default function Hero() {
   return (
     <section className="bg-brand-gradient text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/10"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary/10"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div className="space-y-6">
               <h1 className="text-4xl lg:text-6xl font-display leading-tight">
                 Servicios Legales
-                <span className="block text-secondary font-bold bg-gold-gradient bg-clip-text text-transparent">Profesionales</span>
+                <span className="block text-secondary font-bold">Profesionales</span>
               </h1>
-              <p className="text-xl text-white/90 leading-relaxed font-serif">
+              <p className="text-xl text-white/90 leading-relaxed font-sans">
                 Plataforma integral para abogados y clientes. Encuentra servicios legales especializados, 
                 consulta nuestro blog jurídico y accede a recursos profesionales.
               </p>
@@ -28,7 +28,7 @@ export default function Hero() {
                 </Button>
               </Link>
               <Link href="/auth/register">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary transition-all">
+                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-primary font-semibold border-2 border-secondary hover:border-secondary/90 shadow-lg hover:shadow-xl transition-all">
                   Registrarse Como Abogado
                 </Button>
               </Link>

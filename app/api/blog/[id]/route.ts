@@ -114,7 +114,7 @@ export async function DELETE(
     // Verify authentication
     const user = verifyAuth(request);
     
-    const deleted = await deleteBlogPost(params.id, user.userId);
+    const deleted = await deleteBlogPost(params.id, user.userId, user.role);
     
     if (!deleted) {
       return NextResponse.json(

@@ -21,6 +21,7 @@ export interface Consultation {
   client_email?: string;
   lawyer_name?: string;
   lawyer_email?: string;
+  lawyer_user_id?: string;
   service_title?: string;
   service_type?: string;
 }

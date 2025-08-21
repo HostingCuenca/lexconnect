@@ -33,6 +33,7 @@ const getNavigationItems = (userRole: string) => {
       ...baseItems,
       { href: '/dashboard/lawyers', label: 'Administrar Abogados', icon: Briefcase },
       { href: '/dashboard/users', label: 'Usuarios', icon: Users },
+      { href: '/dashboard/consultations', label: 'Todas las Consultas', icon: Shield },
       { href: '/dashboard/blog', label: 'Blog', icon: BookOpen },
       { href: '/dashboard/ecommerce', label: 'E-commerce', icon: ShoppingCart },
       { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
@@ -43,6 +44,8 @@ const getNavigationItems = (userRole: string) => {
     return [
       ...baseItems,
       { href: '/dashboard/clients', label: 'Clientes', icon: Users },
+      { href: '/dashboard/consultations', label: 'Mis Consultas', icon: Shield },
+      { href: '/dashboard/blog', label: 'Mis Artículos', icon: BookOpen },
       { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
     ];
   }

@@ -74,13 +74,15 @@ export default function AboutPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-brand-gradient text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary/10"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Sobre LexConnect
+            <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
+              Sobre{' '}
+              <span className="text-secondary">LexConnect</span>
             </h1>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-white/90 max-w-2xl mx-auto font-sans">
               Somos una plataforma innovadora que conecta abogados especializados con clientes 
               que necesitan servicios legales de calidad. Nuestra misión es democratizar el 
               acceso a la justicia a través de la tecnología.
@@ -97,7 +99,7 @@ export default function AboutPage() {
               const IconComponent = stat.icon;
               return (
                 <div key={index} className="text-center">
-                  <IconComponent className="h-12 w-12 text-blue-700 mx-auto mb-4" />
+                  <IconComponent className="h-12 w-12 text-primary mx-auto mb-4" />
                   <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
                   <div className="text-gray-600">{stat.label}</div>
                 </div>
@@ -126,7 +128,7 @@ export default function AboutPage() {
                 transparencia en precios, calidad en el servicio y resultados excepcionales.
               </p>
               <Link href="/services">
-                <Button size="lg" className="bg-blue-700 hover:bg-blue-800">
+                <Button size="lg" className="bg-primary hover:bg-primary/90">
                   Explorar Servicios
                 </Button>
               </Link>
@@ -160,7 +162,7 @@ export default function AboutPage() {
               return (
                 <Card key={index} className="text-center hover:shadow-lg transition-shadow">
                   <CardContent className="p-8">
-                    <IconComponent className="h-12 w-12 text-blue-700 mx-auto mb-4" />
+                    <IconComponent className="h-12 w-12 text-primary mx-auto mb-4" />
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">
                       {value.title}
                     </h3>
@@ -201,7 +203,7 @@ export default function AboutPage() {
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     {member.name}
                   </h3>
-                  <p className="text-blue-600 font-medium mb-2">{member.role}</p>
+                  <p className="text-secondary font-medium mb-2">{member.role}</p>
                   <p className="text-gray-600 mb-2">{member.specialty}</p>
                   <p className="text-sm text-gray-500">{member.experience} de experiencia</p>
                 </CardContent>
@@ -212,23 +214,23 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-900">
+      <section className="py-20 bg-primary">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+          <h2 className="text-3xl lg:text-4xl font-display font-bold text-white mb-6">
             ¿Listo para Conectar con el Abogado Ideal?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="text-xl text-white/90 mb-8 font-sans">
             Únete a miles de clientes satisfechos que han encontrado soluciones legales 
             efectivas a través de nuestra plataforma.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/services">
-              <Button size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-blue-900">
+              <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-primary">
                 Explorar Servicios
               </Button>
             </Link>
             <Link href="/auth/register">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-900">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
                 Registrarse Como Abogado
               </Button>
             </Link>

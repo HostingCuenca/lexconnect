@@ -106,7 +106,8 @@ export default function ConsultationsPage() {
 
       const response = await fetch(`/api/consultations?${params.toString()}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
 
@@ -150,6 +151,122 @@ export default function ConsultationsPage() {
 
   const stats = getStats();
 
+  // Funciones para manejar cambios de estado
+  const handleAcceptConsultation = async (consultationId: string) => {
+    // Mostrar prompt para comentarios al aceptar
+    const acceptanceNotes = window.prompt(
+      'Comentarios al aceptar la consulta (opcional):\n\nPuedes incluir detalles sobre el precio estimado, timeline o cualquier aclaración:'
+    );
+    
+    // Si el usuario cancela, no hacer nada
+    if (acceptanceNotes === null) return;
+
+    try {
+      const estimatedPrice = window.prompt('Precio estimado (opcional):');
+      
+      const response = await fetch(`/api/consultations/${consultationId}/accept`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          estimated_price: estimatedPrice ? parseFloat(estimatedPrice) : undefined,
+          lawyer_notes: acceptanceNotes || undefined
+        })
+      });
+
+      if (response.ok) {
+        fetchConsultations(); // Refrescar lista
+      } else {
+        setError('Error al aceptar la consulta');
+      }
+    } catch (error) {
+      setError('Error al aceptar la consulta');
+    }
+  };
+
+  const handleRejectConsultation = async (consultationId: string) => {
+    try {
+      const response = await fetch(`/api/consultations/${consultationId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        fetchConsultations(); // Refrescar lista
+      } else {
+        setError('Error al rechazar la consulta');
+      }
+    } catch (error) {
+      setError('Error al rechazar la consulta');
+    }
+  };
+
+  const handleStartConsultation = async (consultationId: string) => {
+    try {
+      const response = await fetch(`/api/consultations/${consultationId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: 'en_proceso' })
+      });
+
+      if (response.ok) {
+        fetchConsultations(); // Refrescar lista
+      } else {
+        setError('Error al iniciar la consulta');
+      }
+    } catch (error) {
+      setError('Error al iniciar la consulta');
+    }
+  };
+
+  const handleCompleteConsultation = async (consultationId: string) => {
+    try {
+      const response = await fetch(`/api/consultations/${consultationId}/complete`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        fetchConsultations(); // Refrescar lista
+      } else {
+        setError('Error al completar la consulta');
+      }
+    } catch (error) {
+      setError('Error al completar la consulta');
+    }
+  };
+
+  const handleCancelConsultation = async (consultationId: string) => {
+    try {
+      const response = await fetch(`/api/consultations/${consultationId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        fetchConsultations(); // Refrescar lista
+      } else {
+        setError('Error al cancelar la consulta');
+      }
+    } catch (error) {
+      setError('Error al cancelar la consulta');
+    }
+  };
+
   if (loading) {
     return (
       <DashboardLayout>
@@ -178,15 +295,22 @@ export default function ConsultationsPage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Mis Consultas</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {user?.role === 'administrador' ? 'Todas las Consultas' : 
+               user?.role === 'abogado' ? 'Mis Consultas' : 'Mis Consultas'}
+            </h1>
             <p className="text-gray-600">
-              Gestiona y da seguimiento a todas tus consultas legales
+              {user?.role === 'administrador' ? 'Gestiona todas las consultas del sistema' :
+               user?.role === 'abogado' ? 'Gestiona las consultas asignadas a ti' :
+               'Gestiona y da seguimiento a todas tus consultas legales'}
             </p>
           </div>
-          <Button onClick={() => window.location.href = '/lawyers'}>
-            <Plus className="h-4 w-4 mr-2" />
-            Nueva Consulta
-          </Button>
+          {user?.role === 'cliente' && (
+            <Button onClick={() => window.location.href = '/lawyers'}>
+              <Plus className="h-4 w-4 mr-2" />
+              Nueva Consulta
+            </Button>
+          )}
         </div>
 
         {/* Stats */}
@@ -353,23 +477,50 @@ export default function ConsultationsPage() {
                   </CardHeader>
                   
                   <CardContent className="space-y-4">
-                    {/* Lawyer and Service Info */}
+                    {/* Client and Service Info - Vista específica por rol */}
                     <div className="grid md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <User className="h-5 w-5 text-gray-400" />
-                        <div>
-                          <p className="font-medium text-gray-900">{consultation.lawyer_name}</p>
-                          <p className="text-sm text-gray-600">{consultation.lawyer_email}</p>
-                        </div>
-                      </div>
-                      {consultation.service_title && (
-                        <div className="flex items-center space-x-3">
-                          <Briefcase className="h-5 w-5 text-gray-400" />
-                          <div>
-                            <p className="font-medium text-gray-900">{consultation.service_title}</p>
-                            <p className="text-sm text-gray-600 capitalize">{consultation.service_type}</p>
+                      {user?.role === 'abogado' || user?.role === 'administrador' ? (
+                        /* Vista para Abogados/Admin - Mostrar info del cliente */
+                        <>
+                          <div className="flex items-center space-x-3">
+                            <User className="h-5 w-5 text-gray-400" />
+                            <div>
+                              <p className="font-medium text-gray-900">{consultation.client_name}</p>
+                              <p className="text-sm text-gray-600">{consultation.client_email}</p>
+                              <p className="text-xs text-gray-500">Cliente</p>
+                            </div>
                           </div>
-                        </div>
+                          {consultation.service_title && (
+                            <div className="flex items-center space-x-3">
+                              <Briefcase className="h-5 w-5 text-gray-400" />
+                              <div>
+                                <p className="font-medium text-gray-900">{consultation.service_title}</p>
+                                <p className="text-sm text-gray-600 capitalize">{consultation.service_type}</p>
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        /* Vista para Clientes - Mostrar info del abogado */
+                        <>
+                          <div className="flex items-center space-x-3">
+                            <User className="h-5 w-5 text-gray-400" />
+                            <div>
+                              <p className="font-medium text-gray-900">{consultation.lawyer_name}</p>
+                              <p className="text-sm text-gray-600">{consultation.lawyer_email}</p>
+                              <p className="text-xs text-gray-500">Abogado</p>
+                            </div>
+                          </div>
+                          {consultation.service_title && (
+                            <div className="flex items-center space-x-3">
+                              <Briefcase className="h-5 w-5 text-gray-400" />
+                              <div>
+                                <p className="font-medium text-gray-900">{consultation.service_title}</p>
+                                <p className="text-sm text-gray-600 capitalize">{consultation.service_type}</p>
+                              </div>
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
 
@@ -419,12 +570,77 @@ export default function ConsultationsPage() {
                         )}
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Button variant="outline" size="sm">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => window.location.href = `/dashboard/consultations/${consultation.id}`}
+                        >
                           <Eye className="h-4 w-4 mr-1" />
                           Ver Detalles
                         </Button>
-                        {consultation.status === 'pendiente' && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => window.location.href = `/dashboard/consultations/${consultation.id}/chat`}
+                        >
+                          <MessageSquare className="h-4 w-4 mr-1" />
+                          Chat
+                        </Button>
+                        {/* Acciones específicas por rol */}
+                        {user?.role === 'abogado' && consultation.status === 'pendiente' && (
+                          <>
+                            <Button 
+                              size="sm" 
+                              className="bg-green-600 hover:bg-green-700 text-white"
+                              onClick={() => handleAcceptConsultation(consultation.id)}
+                            >
+                              <CheckCircle className="h-4 w-4 mr-1" />
+                              Aceptar
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="text-red-600 hover:text-red-700 border-red-200"
+                              onClick={() => handleRejectConsultation(consultation.id)}
+                            >
+                              <XCircle className="h-4 w-4 mr-1" />
+                              Rechazar
+                            </Button>
+                          </>
+                        )}
+                        {user?.role === 'abogado' && consultation.status === 'aceptada' && (
+                          <Button 
+                            size="sm" 
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                            onClick={() => handleStartConsultation(consultation.id)}
+                          >
+                            <AlertCircle className="h-4 w-4 mr-1" />
+                            Iniciar
+                          </Button>
+                        )}
+                        {user?.role === 'abogado' && consultation.status === 'en_proceso' && (
+                          <Button 
+                            size="sm" 
+                            className="bg-purple-600 hover:bg-purple-700 text-white"
+                            onClick={() => handleCompleteConsultation(consultation.id)}
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Completar
+                          </Button>
+                        )}
+                        {user?.role === 'cliente' && consultation.status === 'pendiente' && (
                           <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
+                            <XCircle className="h-4 w-4 mr-1" />
+                            Cancelar
+                          </Button>
+                        )}
+                        {(user?.role === 'administrador') && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-red-600 hover:text-red-700"
+                            onClick={() => handleCancelConsultation(consultation.id)}
+                          >
                             <XCircle className="h-4 w-4 mr-1" />
                             Cancelar
                           </Button>

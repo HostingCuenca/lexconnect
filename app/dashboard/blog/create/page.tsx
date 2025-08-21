@@ -199,13 +199,13 @@ export default function CreateBlogPage() {
     );
   }
 
-  // Show access denied if not admin
-  if (!user || user.role !== 'administrador') {
+  // Show access denied if not admin or lawyer
+  if (!user || (user.role !== 'administrador' && user.role !== 'abogado')) {
     return (
       <DashboardLayout>
         <div className="text-center py-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Acceso Denegado</h2>
-          <p className="text-gray-600">Solo los administradores pueden crear artículos.</p>
+          <p className="text-gray-600">Solo los administradores y abogados pueden crear artículos.</p>
         </div>
       </DashboardLayout>
     );

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, useAuthenticatedFetch } from '@/contexts/AuthContext';
+import { toast } from '@/hooks/use-toast';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -49,6 +50,7 @@ interface ServiceStats {
 
 export default function ServicesPage() {
   const { user, loading } = useAuth();
+  const authenticatedFetch = useAuthenticatedFetch();
   const router = useRouter();
   const [services, setServices] = useState<LawyerService[]>([]);
   const [stats, setStats] = useState<ServiceStats | null>(null);
@@ -79,7 +81,7 @@ export default function ServicesPage() {
       if (statusFilter !== 'all') params.append('status', statusFilter);
       if (typeFilter !== 'all') params.append('type', typeFilter);
       
-      const response = await fetch(`/api/services/?${params.toString()}`);
+      const response = await authenticatedFetch(`/api/services/?${params.toString()}`);
       
       if (response.ok) {
         const data = await response.json();
@@ -94,7 +96,7 @@ export default function ServicesPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/services/stats/');
+      const response = await authenticatedFetch('/api/services/stats/');
       if (response.ok) {
         const data = await response.json();
         setStats(data.data);
@@ -108,13 +110,44 @@ export default function ServicesPage() {
     fetchServices();
   };
 
+  const handleDeleteService = async (serviceId: string) => {
+    if (!confirm('¿Estás seguro de que deseas eliminar este servicio? Esta acción no se puede deshacer.')) {
+      return;
+    }
+
+    try {
+      const response = await authenticatedFetch(`/api/services/${serviceId}`, {
+        method: 'DELETE'
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        toast({
+          title: "Éxito",
+          description: "Servicio eliminado exitosamente"
+        });
+        fetchServices(); // Refresh the list
+        fetchStats(); // Refresh stats
+      } else {
+        throw new Error(data.message || 'Error al eliminar servicio');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "No se pudo eliminar el servicio",
+        variant: "destructive"
+      });
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'active':
+      case 'activo':
         return <Badge className="bg-green-100 text-green-800">Activo</Badge>;
-      case 'draft':
-        return <Badge className="bg-yellow-100 text-yellow-800">Borrador</Badge>;
-      case 'inactive':
+      case 'suspendido':
+        return <Badge className="bg-yellow-100 text-yellow-800">Suspendido</Badge>;
+      case 'inactivo':
         return <Badge className="bg-red-100 text-red-800">Inactivo</Badge>;
       default:
         return <Badge variant="outline">Desconocido</Badge>;
@@ -256,9 +289,9 @@ export default function ServicesPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todos los estados</SelectItem>
-                    <SelectItem value="active">Activos</SelectItem>
-                    <SelectItem value="draft">Borradores</SelectItem>
-                    <SelectItem value="inactive">Inactivos</SelectItem>
+                    <SelectItem value="activo">Activos</SelectItem>
+                    <SelectItem value="suspendido">Suspendidos</SelectItem>
+                    <SelectItem value="inactivo">Inactivos</SelectItem>
                   </SelectContent>
                 </Select>
                 
@@ -356,10 +389,17 @@ export default function ServicesPage() {
                       <Edit className="h-4 w-4 mr-2" />
                       Editar
                     </Button>
-                    <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Eliminar
-                    </Button>
+                    {user?.role === 'administrador' && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-red-600 hover:text-red-700"
+                        onClick={() => handleDeleteService(service.id)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Eliminar
+                      </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>

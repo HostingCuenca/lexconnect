@@ -125,13 +125,15 @@ export default function ServicesPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-brand-gradient text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary/10"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-4">
-              Servicios Legales Especializados
+            <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
+              Servicios Legales 
+              <span className="text-secondary">Especializados</span>
             </h1>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+            <p className="text-xl text-white/90 max-w-2xl mx-auto font-sans">
               Encuentra el abogado perfecto para tu caso. {lawyers.length} especialistas verificados disponibles.
             </p>
           </div>

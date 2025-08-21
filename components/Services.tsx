@@ -61,10 +61,10 @@ export default function Services() {
     <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 font-sans">
             Nuestros Servicios Legales
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto font-sans">
             Ofrecemos una amplia gama de servicios legales especializados para satisfacer 
             todas tus necesidades jurídicas con la máxima profesionalidad.
           </p>
@@ -77,23 +77,23 @@ export default function Services() {
               <Card key={index} className="h-full hover:shadow-lg transition-shadow duration-300">
                 <CardHeader>
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <IconComponent className="h-6 w-6 text-blue-700" />
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <IconComponent className="h-6 w-6 text-primary" />
                     </div>
                     <div className="text-right">
-                      <span className="text-2xl font-bold text-blue-700">{service.price}</span>
+                      <span className="text-2xl font-bold text-secondary">{service.price}</span>
                     </div>
                   </div>
-                  <CardTitle className="text-xl">{service.title}</CardTitle>
-                  <CardDescription className="text-gray-600">
+                  <CardTitle className="text-xl font-sans">{service.title}</CardTitle>
+                  <CardDescription className="text-gray-600 font-sans">
                     {service.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 mb-6">
                     {service.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center text-sm text-gray-600">
-                        <div className="w-2 h-2 bg-blue-700 rounded-full mr-3"></div>
+                      <li key={featureIndex} className="flex items-center text-sm text-gray-600 font-sans">
+                        <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
                         {feature}
                       </li>
                     ))}
@@ -110,7 +110,7 @@ export default function Services() {
 
         <div className="text-center">
           <Link href="/services">
-            <Button size="lg" variant="outline" className="border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white">
+            <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
               Ver Todos los Servicios
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

@@ -42,12 +42,13 @@ export async function POST(
       );
     }
     
-    const { estimated_price } = await request.json();
+    const { estimated_price, lawyer_notes } = await request.json();
     
     const acceptedConsultation = await acceptConsultation(
       params.id, 
       lawyerProfile.id, 
-      estimated_price
+      estimated_price,
+      lawyer_notes
     );
     
     if (!acceptedConsultation) {

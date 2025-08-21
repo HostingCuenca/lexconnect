@@ -116,6 +116,7 @@ export async function getConsultationById(consultationId: string): Promise<Consu
         uc.email as client_email,
         ul.first_name || ' ' || ul.last_name as lawyer_name,
         ul.email as lawyer_email,
+        ul.id as lawyer_user_id,
         ls.title as service_title,
         ls.service_type
       FROM consultations c
@@ -143,6 +144,7 @@ export async function getClientConsultations(clientId: string, filters?: Consult
         uc.email as client_email,
         ul.first_name || ' ' || ul.last_name as lawyer_name,
         ul.email as lawyer_email,
+        ul.id as lawyer_user_id,
         ls.title as service_title,
         ls.service_type
       FROM consultations c
@@ -201,6 +203,7 @@ export async function getLawyerConsultations(lawyerId: string, filters?: Consult
         uc.email as client_email,
         ul.first_name || ' ' || ul.last_name as lawyer_name,
         ul.email as lawyer_email,
+        ul.id as lawyer_user_id,
         ls.title as service_title,
         ls.service_type
       FROM consultations c
@@ -259,6 +262,7 @@ export async function getAllConsultations(filters?: ConsultationFilters): Promis
         uc.email as client_email,
         ul.first_name || ' ' || ul.last_name as lawyer_name,
         ul.email as lawyer_email,
+        ul.id as lawyer_user_id,
         ls.title as service_title,
         ls.service_type
       FROM consultations c
@@ -318,7 +322,7 @@ export async function getAllConsultations(filters?: ConsultationFilters): Promis
 }
 
 // Accept consultation (lawyer action)
-export async function acceptConsultation(consultationId: string, lawyerId: string, estimatedPrice?: number): Promise<Consultation | null> {
+export async function acceptConsultation(consultationId: string, lawyerId: string, estimatedPrice?: number, lawyerNotes?: string): Promise<Consultation | null> {
   return withTransaction(async (client: PoolClient) => {
     const updateFields = ['status = $2'];
     const values = [consultationId, 'aceptada'];
@@ -327,6 +331,11 @@ export async function acceptConsultation(consultationId: string, lawyerId: strin
     if (estimatedPrice !== undefined) {
       updateFields.push(`estimated_price = $${paramIndex++}`);
       values.push(estimatedPrice);
+    }
+
+    if (lawyerNotes !== undefined) {
+      updateFields.push(`lawyer_notes = $${paramIndex++}`);
+      values.push(lawyerNotes);
     }
 
     const result = await client.query(`

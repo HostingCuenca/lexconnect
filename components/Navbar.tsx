@@ -25,7 +25,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="font-display text-2xl text-primary font-bold tracking-tight hover:text-accent transition-colors">
+              <span className="font-display text-3xl text-primary font-bold tracking-tight hover:text-secondary transition-colors">
                 LexConnect
               </span>
             </Link>
@@ -37,7 +37,7 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-gray-600 hover:text-primary transition-colors duration-200 font-medium"
+                className="text-gray-600 hover:text-primary transition-colors duration-200 font-sans font-medium"
               >
                 {item.label}
               </Link>

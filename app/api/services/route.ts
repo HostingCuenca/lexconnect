@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
       price,
       duration_minutes,
       service_type,
-      status = 'active',
+      status = 'activo',
       requirements,
       deliverables
     } = data;

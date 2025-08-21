@@ -38,9 +38,9 @@ export default function DashboardBlogPage() {
 
   // Fetch blog posts when auth is ready and user is available
   useEffect(() => {
-    if (!authLoading && user && user.role === 'administrador') {
+    if (!authLoading && user && (user.role === 'administrador' || user.role === 'abogado')) {
       fetchBlogPosts();
-    } else if (!authLoading && (!user || user.role !== 'administrador')) {
+    } else if (!authLoading && (!user || (user.role !== 'administrador' && user.role !== 'abogado'))) {
       setPostsLoading(false);
     }
   }, [authLoading, user]);
@@ -48,7 +48,13 @@ export default function DashboardBlogPage() {
   const fetchBlogPosts = async () => {
     try {
       setPostsLoading(true);
-      const response = await authenticatedFetch('/api/blog?status=all');
+      
+      // Admin ve todos los artículos, abogado solo los suyos
+      const endpoint = user?.role === 'administrador' 
+        ? '/api/blog?status=all' 
+        : '/api/blog';
+        
+      const response = await authenticatedFetch(endpoint);
       const data = await response.json();
       
       if (data.success) {
@@ -148,13 +154,13 @@ export default function DashboardBlogPage() {
     );
   }
 
-  // Show access denied if not admin
-  if (!user || user.role !== 'administrador') {
+  // Show access denied if not admin or lawyer
+  if (!user || (user.role !== 'administrador' && user.role !== 'abogado')) {
     return (
       <DashboardLayout>
         <div className="text-center py-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Acceso Denegado</h2>
-          <p className="text-gray-600">Solo los administradores pueden gestionar el blog.</p>
+          <p className="text-gray-600">Solo los administradores y abogados pueden gestionar artículos.</p>
         </div>
       </DashboardLayout>
     );
@@ -196,9 +202,13 @@ export default function DashboardBlogPage() {
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Gestión de Blog</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {user?.role === 'administrador' ? 'Gestión de Blog' : 'Mis Artículos'}
+            </h1>
             <p className="text-gray-600">
-              Crea y gestiona artículos para el blog jurídico de LexConnect.
+              {user?.role === 'administrador' 
+                ? 'Crea y gestiona artículos para el blog jurídico de LexConnect.'
+                : 'Crea y gestiona tus artículos como especialista legal.'}
             </p>
           </div>
           <Link href="/dashboard/blog/create">
@@ -316,15 +326,17 @@ export default function DashboardBlogPage() {
                           <Edit className="h-4 w-4" />
                         </Button>
                       </Link>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="text-red-600 hover:text-red-700"
-                        onClick={() => handleDeletePost(post.id)}
-                        title="Eliminar artículo"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {user?.role === 'administrador' && (
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="text-red-600 hover:text-red-700"
+                          onClick={() => handleDeletePost(post.id)}
+                          title="Eliminar artículo"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </div>
                 ))}

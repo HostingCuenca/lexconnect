@@ -23,10 +23,10 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 font-sans">
               ¿Por Qué Elegirnos?
             </h2>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-8 font-sans">
               Somos una plataforma líder que conecta clientes con los mejores abogados 
               especializados del país. Nuestra misión es democratizar el acceso a 
               servicios legales de calidad.
@@ -37,9 +37,9 @@ export default function About() {
                 const IconComponent = stat.icon;
                 return (
                   <div key={index} className="text-center">
-                    <IconComponent className="h-8 w-8 text-blue-700 mx-auto mb-2" />
-                    <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-                    <div className="text-sm text-gray-600">{stat.label}</div>
+                    <IconComponent className="h-8 w-8 text-primary mx-auto mb-2" />
+                    <div className="text-2xl font-bold text-gray-900 font-sans">{stat.value}</div>
+                    <div className="text-sm text-gray-600 font-sans">{stat.label}</div>
                   </div>
                 );
               })}
@@ -49,7 +49,7 @@ export default function About() {
               {features.map((feature, index) => (
                 <li key={index} className="flex items-center">
                   <CheckCircle className="h-5 w-5 text-green-600 mr-3 flex-shrink-0" />
-                  <span className="text-gray-700">{feature}</span>
+                  <span className="text-gray-700 font-sans">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -62,12 +62,12 @@ export default function About() {
               className="rounded-lg shadow-xl"
             />
             
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-secondary/10 border-secondary/30">
               <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-blue-900 mb-3">
+                <h3 className="text-xl font-bold text-primary mb-3 font-sans">
                   Compromiso con la Excelencia
                 </h3>
-                <p className="text-blue-800">
+                <p className="text-primary/80 font-sans">
                   Nuestro compromiso es brindar servicios legales de la más alta calidad, 
                   combinando experiencia tradicional con tecnología moderna para ofrecer 
                   soluciones eficientes y accesibles.

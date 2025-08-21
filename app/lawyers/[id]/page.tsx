@@ -27,7 +27,10 @@ import {
   Globe,
   MessageSquare,
   ChevronLeft,
-  Users
+  Users,
+  FileText,
+  Eye,
+  ArrowRight
 } from 'lucide-react';
 
 interface LawyerService {
@@ -79,6 +82,8 @@ export default function LawyerDetailPage() {
   const router = useRouter();
   const { user, token, login } = useAuth();
   const [lawyer, setLawyer] = useState<LawyerProfile | null>(null);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [articlesLoading, setArticlesLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<LawyerService | null>(null);
@@ -108,6 +113,7 @@ export default function LawyerDetailPage() {
   useEffect(() => {
     if (params.id) {
       fetchLawyer(params.id as string);
+      fetchLawyerArticles(params.id as string);
     }
   }, [params.id]);
 
@@ -131,6 +137,36 @@ export default function LawyerDetailPage() {
       setError(error.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchLawyerArticles = async (id: string) => {
+    try {
+      setArticlesLoading(true);
+      const response = await fetch(`/api/lawyers/${id}/articles`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setArticles(data.data);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching lawyer articles:', error);
+    } finally {
+      setArticlesLoading(false);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    try {
+      return new Date(dateString).toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch {
+      return dateString;
     }
   };
 
@@ -683,6 +719,88 @@ export default function LawyerDetailPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Articles by Lawyer */}
+            {articles.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <FileText className="h-5 w-5" />
+                    <span>Artículos y Análisis Legales</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Artículos especializados escritos por {lawyer?.first_name} {lawyer?.last_name}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {articlesLoading ? (
+                    <div className="text-center py-8">
+                      <div className="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full text-sm text-primary">
+                        <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full mr-2"></div>
+                        Cargando artículos...
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {articles.slice(0, 3).map((article) => (
+                        <div key={article.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                          <div className="flex space-x-4">
+                            <div className="w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg">
+                              <img
+                                src={article.featured_image}
+                                alt={article.title}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-gray-900 line-clamp-2 mb-1">
+                                {article.title}
+                              </h4>
+                              <p className="text-sm text-gray-600 line-clamp-2 mb-2">
+                                {article.excerpt}
+                              </p>
+                              <div className="flex items-center space-x-4 text-xs text-gray-500">
+                                <span className="bg-primary/10 text-primary px-2 py-1 rounded-full">
+                                  {article.category}
+                                </span>
+                                <div className="flex items-center space-x-1">
+                                  <Eye className="h-3 w-3" />
+                                  <span>{article.views} vistas</span>
+                                </div>
+                                <span>{formatDate(article.published_at || article.created_at)}</span>
+                              </div>
+                            </div>
+                            <div className="flex-shrink-0">
+                              <a 
+                                href={`/blog/${article.slug}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center text-sm text-primary hover:text-primary/80 transition-colors"
+                              >
+                                Leer artículo
+                                <ArrowRight className="h-3 w-3 ml-1" />
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {articles.length > 3 && (
+                        <div className="text-center pt-4 border-t">
+                          <p className="text-sm text-gray-600 mb-3">
+                            {articles.length - 3} artículo{articles.length - 3 > 1 ? 's' : ''} más disponible{articles.length - 3 > 1 ? 's' : ''}
+                          </p>
+                          <Button variant="outline" size="sm">
+                            Ver todos los artículos
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Sidebar */}

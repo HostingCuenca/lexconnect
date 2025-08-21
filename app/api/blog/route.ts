@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllBlogPosts, getPublishedBlogPosts, createBlogPost, searchBlogPosts } from '@/lib/blog';
+import { getAllBlogPosts, getPublishedBlogPosts, createBlogPost, searchBlogPosts, getBlogPostsByAuthor } from '@/lib/blog';
 import { getAuthenticatedUser } from '@/lib/auth';
 
 // Helper to verify authentication (simplified - any authenticated user)
@@ -29,14 +29,22 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
     const search = searchParams.get('search');
     const category = searchParams.get('category');
-
+    
+    // Check if user is authenticated for filtered results
+    const user = getAuthenticatedUser(request);
+    
     let posts;
     
     if (search) {
       posts = await searchBlogPosts(search, category || undefined);
-    } else if (status === 'all') {
+    } else if (status === 'all' && user?.role === 'administrador') {
+      // Solo admin puede ver todos los artículos
       posts = await getAllBlogPosts();
+    } else if (user?.role === 'abogado') {
+      // Abogado solo ve sus propios artículos
+      posts = await getBlogPostsByAuthor(user.userId);
     } else {
+      // Público general ve solo los publicados
       posts = await getPublishedBlogPosts();
     }
 

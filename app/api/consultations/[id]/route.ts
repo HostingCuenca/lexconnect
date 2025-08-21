@@ -33,11 +33,11 @@ export async function GET(
     // Check access permissions
     if (user.role !== 'administrador' && 
         consultation.client_id !== user.userId && 
-        consultation.lawyer_id !== user.userId) {
+        consultation.lawyer_user_id !== user.userId) {
       return NextResponse.json(
         { 
           success: false,
-          error: 'No tienes permisos para ver esta consulta' 
+          error: 'No tienes permisos para ver esta consulta'
         },
         { status: 403 }
       );

@@ -377,13 +377,20 @@ export async function incrementBlogPostViews(slug: string): Promise<void> {
 }
 
 // Delete blog post
-export async function deleteBlogPost(id: string, authorId: string): Promise<boolean> {
+export async function deleteBlogPost(id: string, authorId: string, userRole?: string): Promise<boolean> {
   try {
-    const result = await query(`
-      DELETE FROM blog_posts 
-      WHERE id = $1 AND author_id = $2
-      RETURNING id
-    `, [id, authorId]);
+    let queryText = 'DELETE FROM blog_posts WHERE id = $1';
+    const params = [id];
+    
+    // Solo verificar autor si no es administrador
+    if (userRole !== 'administrador') {
+      queryText += ' AND author_id = $2';
+      params.push(authorId);
+    }
+    
+    queryText += ' RETURNING id';
+    
+    const result = await query(queryText, params);
     
     return result.rows.length > 0;
   } catch (error) {

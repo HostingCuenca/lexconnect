@@ -142,13 +142,15 @@ export default function LawyersDirectoryPage() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-brand-gradient text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary/10"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-4">
-              Directorio de Abogados
+            <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
+              Directorio de{' '}
+              <span className="text-secondary">Abogados</span>
             </h1>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+            <p className="text-xl text-white/90 max-w-2xl mx-auto font-sans">
               Encuentra abogados especializados verificados. {lawyers.length} profesionales disponibles para ayudarte.
             </p>
           </div>
@@ -213,7 +215,7 @@ export default function LawyersDirectoryPage() {
               {lawyers.map((lawyer) => (
                 <Card key={lawyer.id} className="h-full hover:shadow-xl transition-all duration-300 group overflow-hidden">
                   {/* Profile Photo Header */}
-                  <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white relative">
+                  <div className="bg-brand-gradient p-6 text-white relative">
                     <div className="flex items-center space-x-4">
                       <div className="relative">
                         <img
