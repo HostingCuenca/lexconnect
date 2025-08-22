@@ -20,7 +20,8 @@ import {
   Filter,
   Eye,
   MessageSquare,
-  Briefcase
+  Briefcase,
+  CreditCard
 } from 'lucide-react';
 
 interface Consultation {
@@ -40,6 +41,15 @@ interface Consultation {
   lawyer_notes?: string;
   created_at: string;
   updated_at: string;
+  payment_id?: string;
+  payment_amount?: number;
+  payment_status?: 'pendiente' | 'procesando' | 'completado' | 'fallido' | 'reembolsado';
+  payment_method?: string;
+  platform_fee?: number;
+  lawyer_earnings?: number;
+  currency?: string;
+  paid_at?: string;
+  payment_created_at?: string;
 }
 
 const getStatusConfig = (status: string) => {
@@ -83,6 +93,48 @@ const getPriorityConfig = (priority: string) => {
   return configs[priority as keyof typeof configs] || configs.medium;
 };
 
+const getPaymentStatusConfig = (status?: string) => {
+  const configs = {
+    pendiente: { 
+      label: 'Pendiente', 
+      className: 'bg-yellow-100 text-yellow-800',
+      dotColor: 'bg-yellow-500'
+    },
+    procesando: { 
+      label: 'Procesando', 
+      className: 'bg-blue-100 text-blue-800',
+      dotColor: 'bg-blue-500'
+    },
+    completado: { 
+      label: 'Completado', 
+      className: 'bg-green-100 text-green-800',
+      dotColor: 'bg-green-500'
+    },
+    fallido: { 
+      label: 'Fallido', 
+      className: 'bg-red-100 text-red-800',
+      dotColor: 'bg-red-500'
+    },
+    reembolsado: { 
+      label: 'Reembolsado', 
+      className: 'bg-purple-100 text-purple-800',
+      dotColor: 'bg-purple-500'
+    }
+  };
+  return configs[status as keyof typeof configs] || {
+    label: 'Sin pago',
+    className: 'bg-gray-100 text-gray-800',
+    dotColor: 'bg-gray-500'
+  };
+};
+
+const formatCurrency = (amount: number, currency = 'MXN') => {
+  return new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: currency
+  }).format(amount);
+};
+
 export default function ConsultationsPage() {
   const { user, token } = useAuth();
   const [consultations, setConsultations] = useState<Consultation[]>([]);
@@ -104,9 +156,16 @@ export default function ConsultationsPage() {
       if (statusFilter !== 'all') params.append('status', statusFilter);
       if (priorityFilter !== 'all') params.append('priority', priorityFilter);
 
+      // Obtener token fresco del localStorage o cookies
+      const currentToken = token || localStorage.getItem('lexconnect_token');
+      
+      if (!currentToken) {
+        throw new Error('No hay token de autenticación disponible');
+      }
+
       const response = await fetch(`/api/consultations?${params.toString()}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${currentToken}`,
           'Content-Type': 'application/json'
         }
       });
@@ -541,6 +600,45 @@ export default function ConsultationsPage() {
                         ) : null}
                       </div>
                     )}
+
+                    {/* Payment Info */}
+                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <CreditCard className="h-5 w-5 text-blue-600" />
+                        <div>
+                          {consultation.payment_id ? (
+                            <>
+                              <div className="flex items-center space-x-2">
+                                <p className="font-medium text-blue-900">
+                                  Pago: {formatCurrency(consultation.payment_amount || 0)}
+                                </p>
+                                <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusConfig(consultation.payment_status).className}`}>
+                                  <div className={`w-1.5 h-1.5 rounded-full mr-1 ${getPaymentStatusConfig(consultation.payment_status).dotColor}`} />
+                                  {getPaymentStatusConfig(consultation.payment_status).label}
+                                </div>
+                              </div>
+                              <p className="text-sm text-blue-700 capitalize">
+                                {consultation.payment_method || 'Método no especificado'}
+                              </p>
+                            </>
+                          ) : (
+                            <>
+                              <p className="font-medium text-blue-900">Sin pago registrado</p>
+                              <p className="text-sm text-blue-700">No se ha registrado ningún pago</p>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {consultation.payment_id && consultation.paid_at && (
+                        <div className="text-right">
+                          <p className="text-xs text-blue-600">Pagado el</p>
+                          <p className="text-sm font-medium text-blue-900">
+                            {new Date(consultation.paid_at).toLocaleDateString('es-ES')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
 
                     {/* Notes */}
                     {consultation.lawyer_notes && (

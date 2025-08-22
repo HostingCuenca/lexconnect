@@ -118,13 +118,25 @@ export async function getConsultationById(consultationId: string): Promise<Consu
         ul.email as lawyer_email,
         ul.id as lawyer_user_id,
         ls.title as service_title,
-        ls.service_type
+        ls.service_type,
+        p.id as payment_id,
+        p.amount as payment_amount,
+        p.status as payment_status,
+        p.payment_method,
+        p.platform_fee,
+        p.lawyer_earnings,
+        p.currency,
+        p.paid_at,
+        p.created_at as payment_created_at
       FROM consultations c
       LEFT JOIN users uc ON c.client_id = uc.id
       LEFT JOIN lawyer_profiles lp ON c.lawyer_id = lp.id
       LEFT JOIN users ul ON lp.user_id = ul.id
       LEFT JOIN lawyer_services ls ON c.service_id = ls.id
+      LEFT JOIN payments p ON c.id = p.consultation_id
       WHERE c.id = $1
+      ORDER BY p.created_at DESC
+      LIMIT 1
     `, [consultationId]);
     
     return result.rows.length > 0 ? result.rows[0] : null;

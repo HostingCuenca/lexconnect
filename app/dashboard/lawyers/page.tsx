@@ -27,7 +27,10 @@ import {
   Briefcase,
   Phone,
   Mail,
-  Globe
+  Globe,
+  Check,
+  X,
+  AlertTriangle
 } from 'lucide-react';
 
 interface LawyerService {
@@ -90,6 +93,7 @@ export default function LawyerAdminPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [lawyerToDelete, setLawyerToDelete] = useState<LawyerProfile | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [verifyingLawyer, setVerifyingLawyer] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -189,6 +193,83 @@ export default function LawyerAdminPage() {
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false);
     setLawyerToDelete(null);
+  };
+
+  // Función para cambiar el estado de verificación de un abogado
+  const handleVerifyLawyer = async (lawyerId: string, verify: boolean) => {
+    const action = verify ? 'aprobar' : 'rechazar';
+    let notes = '';
+    
+    if (!verify) {
+      notes = prompt('Ingrese la razón del rechazo (opcional):') || 'Perfil rechazado por administrador.';
+    }
+
+    if (!confirm(`¿Está seguro que desea ${action} este abogado?`)) {
+      return;
+    }
+
+    setVerifyingLawyer(lawyerId);
+    try {
+      // Obtener los datos actuales del abogado
+      const lawyer = lawyers.find(l => l.id === lawyerId);
+      if (!lawyer) {
+        alert('Abogado no encontrado');
+        return;
+      }
+
+      // Usar el endpoint existente de PUT /api/lawyers/[id]
+      const response = await fetch(`/api/lawyers/${lawyerId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // Datos existentes del abogado
+          email: lawyer.email,
+          first_name: lawyer.first_name,
+          last_name: lawyer.last_name,
+          phone: lawyer.phone,
+          license_number: lawyer.license_number,
+          bar_association: lawyer.bar_association || 'Sin especificar',
+          years_experience: lawyer.years_experience || 0,
+          education: lawyer.education || 'Sin especificar',
+          bio: lawyer.bio || 'Sin descripción',
+          hourly_rate: lawyer.hourly_rate || 0,
+          consultation_rate: lawyer.consultation_rate || 0,
+          office_address: lawyer.office_address || 'Sin dirección',
+          languages: lawyer.languages || 'Español',
+          
+          // El cambio importante: actualizar is_verified
+          is_verified: verify,
+          
+          // Mantener especialidades existentes
+          specialties: lawyer.specialties?.map(s => s.id) || [],
+          availability_schedule: {}
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Actualizar el estado local
+        setLawyers(prev => 
+          prev.map(l => 
+            l.id === lawyerId 
+              ? { ...l, is_verified: verify }
+              : l
+          )
+        );
+        alert(`Abogado ${verify ? 'aprobado' : 'rechazado'} exitosamente`);
+      } else {
+        alert(data.message || `Error al ${action} abogado`);
+      }
+    } catch (error) {
+      console.error(`Error ${action} lawyer:`, error);
+      alert('Error de conexión. Intente nuevamente.');
+    } finally {
+      setVerifyingLawyer(null);
+    }
   };
 
   const getMainService = (services: LawyerService[]) => {
@@ -476,6 +557,41 @@ export default function LawyerAdminPage() {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
+                          
+                          {/* Botones de verificación - solo para abogados no verificados */}
+                          {!lawyer.is_verified && (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-green-600 hover:text-green-700"
+                                onClick={() => handleVerifyLawyer(lawyer.id, true)}
+                                disabled={verifyingLawyer === lawyer.id}
+                                title="Aprobar abogado"
+                              >
+                                {verifyingLawyer === lawyer.id ? (
+                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600" />
+                                ) : (
+                                  <Check className="h-4 w-4" />
+                                )}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-orange-600 hover:text-orange-700"
+                                onClick={() => handleVerifyLawyer(lawyer.id, false)}
+                                disabled={verifyingLawyer === lawyer.id}
+                                title="Rechazar abogado"
+                              >
+                                {verifyingLawyer === lawyer.id ? (
+                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-600" />
+                                ) : (
+                                  <X className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </>
+                          )}
+
                           <Button
                             size="sm"
                             variant="outline"

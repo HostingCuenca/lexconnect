@@ -402,7 +402,11 @@ export default function LawyerDetailPage() {
     }
   };
 
-  const formatSchedule = (schedule: Record<string, Array<{start: string; end: string}>>) => {
+  const formatSchedule = (schedule: Record<string, Array<{start: string; end: string}>> | null) => {
+    if (!schedule) {
+      return [];
+    }
+
     const daysInSpanish = {
       monday: 'Lunes',
       tuesday: 'Martes', 
