@@ -147,11 +147,11 @@ export async function GET(request: NextRequest) {
           engagement_rate: stats.total_clients > 0 ? 
             Math.round((activity.clients_with_consultations / stats.total_clients) * 100) : 0
         },
-        top_clients: topClientsResult.rows.map(client => ({
+        top_clients: topClientsResult.rows.map((client: any) => ({
           ...client,
           total_spent: parseFloat(client.total_spent || 0)
         })),
-        recent_clients: recentClientsResult.rows.map(client => ({
+        recent_clients: recentClientsResult.rows.map((client: any) => ({
           ...client,
           created_at: new Date(client.created_at).toLocaleDateString('es-ES'),
           consultation_count: parseInt(client.consultation_count)

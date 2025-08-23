@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
       query(countQuery, queryParams.slice(0, -2)) // Remove limit and offset for count
     ]);
 
-    const clients = clientsResult.rows.map(client => ({
+    const clients = clientsResult.rows.map((client: any) => ({
       ...client,
       full_name: `${client.first_name} ${client.last_name}`,
       status: client.is_active ? 'Activo' : 'Inactivo',

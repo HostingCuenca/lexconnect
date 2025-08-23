@@ -183,13 +183,34 @@ export interface User {
   updated_at: Date;
 }
 
+// Tipo para usuario con contraseña (solo para autenticación)
+export interface UserWithPassword extends User {
+  password_hash: string;
+}
+
 // Función para obtener usuario por email
 export async function getUserByEmail(email: string): Promise<User | null> {
+  try {
+    const result = await query(`
+      SELECT 
+        id, email, first_name, last_name, role, phone, avatar_url, 
+        email_verified, is_active, created_at, updated_at
+      FROM users WHERE email = $1
+    `, [email]);
+    return result.rows[0] || null;
+  } catch (error) {
+    console.error('Error al obtener usuario:', error);
+    throw error;
+  }
+}
+
+// Función para obtener usuario con contraseña (solo para autenticación)
+export async function getUserWithPasswordByEmail(email: string): Promise<UserWithPassword | null> {
   try {
     const result = await query('SELECT * FROM users WHERE email = $1', [email]);
     return result.rows[0] || null;
   } catch (error) {
-    console.error('Error al obtener usuario:', error);
+    console.error('Error al obtener usuario con contraseña:', error);
     throw error;
   }
 }

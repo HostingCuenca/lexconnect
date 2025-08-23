@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getUserByEmail } from '@/lib/database';
+import { getUserByEmail, getUserWithPasswordByEmail } from '@/lib/database';
 import { 
   verifyPassword, 
   generateToken, 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     console.log(`🔐 Intento de login para: ${email}`);
 
     // Buscar usuario en la base de datos
-    const user = await getUserByEmail(email.toLowerCase());
+    const user = await getUserWithPasswordByEmail(email.toLowerCase());
     
     if (!user) {
       console.log(`❌ Usuario no encontrado: ${email}`);
