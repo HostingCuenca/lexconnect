@@ -8,13 +8,11 @@ const dbConfig = {
   database: process.env.DB_NAME || 'lexconnectdb',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'AgroCursos2025',
-  ssl: false, // Cambiar a true si el servidor requiere SSL
-  max: 10, // Reducido para evitar exceso de conexiones
-  min: 0, // Permitir 0 conexiones mínimas
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  max: 5, // Conexiones limitadas
+  min: 1,  // Una conexión mínima
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000, // Aumentado timeout
-  acquireTimeoutMillis: 60000, // Timeout para obtener conexión del pool
-  createTimeoutMillis: 10000, // Timeout para crear nueva conexión
+  connectionTimeoutMillis: 2000,
 };
 
 // Pool de conexiones global

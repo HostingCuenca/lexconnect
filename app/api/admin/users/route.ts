@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthenticatedUser, createAuthError, createAuthSuccess, hashPassword, validatePassword, isValidEmail, validateName } from '@/lib/auth';
-import { pool, withTransaction } from '@/lib/database';
+import { withTransaction } from '@/lib/database';
 import { PoolClient } from 'pg';
 
 export const dynamic = 'force-dynamic';

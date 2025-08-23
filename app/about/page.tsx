@@ -225,12 +225,12 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/services">
-              <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-primary">
+              <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold">
                 Explorar Servicios
               </Button>
             </Link>
             <Link href="/auth/register">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary bg-transparent">
                 Registrarse Como Abogado
               </Button>
             </Link>

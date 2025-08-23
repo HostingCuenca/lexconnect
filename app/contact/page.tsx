@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
@@ -19,13 +22,13 @@ import {
 const contactInfo = [
   {
     icon: MapPin,
-    title: 'Oficina Principal',
-    details: ['Av. 9 de Octubre 123, Piso 15', 'Guayaquil, Ecuador']
+    title: 'Ubicación',
+    details: ['Guayaquil, Ecuador']
   },
   {
     icon: Phone,
     title: 'Teléfono',
-    details: ['+593 4 1234 5678', '+593 4 8765 4321']
+    details: ['+593 98 831 6157']
   },
   {
     icon: Mail,
@@ -40,6 +43,45 @@ const contactInfo = [
 ];
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Crear mensaje para WhatsApp
+    const whatsappMessage = `Hola! Mi nombre es ${formData.firstName} ${formData.lastName}.
+
+*Correo:* ${formData.email}
+*Teléfono:* ${formData.phone}
+*Asunto:* ${formData.subject}
+
+*Mensaje:*
+${formData.message}`;
+    
+    // Número de WhatsApp (sin +, espacios o guiones)
+    const whatsappNumber = '593988316157';
+    
+    // Crear URL de WhatsApp
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+    
+    // Abrir WhatsApp
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -75,31 +117,57 @@ export default function ContactPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">Nombre</Label>
-                      <Input id="firstName" placeholder="Tu nombre" />
+                      <Input 
+                        id="firstName" 
+                        placeholder="Tu nombre" 
+                        value={formData.firstName}
+                        onChange={(e) => handleChange('firstName', e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="lastName">Apellidos</Label>
-                      <Input id="lastName" placeholder="Tus apellidos" />
+                      <Input 
+                        id="lastName" 
+                        placeholder="Tus apellidos" 
+                        value={formData.lastName}
+                        onChange={(e) => handleChange('lastName', e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
                   
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="email">Correo Electrónico</Label>
-                      <Input id="email" type="email" placeholder="tu@ejemplo.com" />
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="tu@ejemplo.com" 
+                        value={formData.email}
+                        onChange={(e) => handleChange('email', e.target.value)}
+                        required
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="phone">Teléfono</Label>
-                      <Input id="phone" placeholder="+52 55 1234 5678" />
+                      <Input 
+                        id="phone" 
+                        placeholder="+593 98 831 6157" 
+                        value={formData.phone}
+                        onChange={(e) => handleChange('phone', e.target.value)}
+                        required
+                      />
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="subject">Asunto</Label>
-                    <Select>
+                    <Select onValueChange={(value) => handleChange('subject', value)} required>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona el tipo de consulta" />
                       </SelectTrigger>
@@ -119,13 +187,17 @@ export default function ContactPage() {
                       id="message"
                       placeholder="Describe tu consulta o necesidad legal..."
                       rows={6}
+                      value={formData.message}
+                      onChange={(e) => handleChange('message', e.target.value)}
+                      required
                     />
                   </div>
 
-                  <Button className="w-full" size="lg">
+                  <Button type="submit" className="w-full" size="lg">
                     <Send className="h-4 w-4 mr-2" />
                     Enviar Mensaje
                   </Button>
+                  </form>
                 </CardContent>
               </Card>
             </div>
@@ -203,19 +275,22 @@ export default function ContactPage() {
               Nuestra Ubicación
             </h2>
             <p className="text-gray-600">
-              Visítanos en nuestra oficina principal en el corazón de Guayaquil
+              Nos encontramos en Guayaquil, Ecuador
             </p>
           </div>
           
           <Card>
             <CardContent className="p-0">
-              <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <MapPin className="h-12 w-12 mx-auto mb-4" />
-                  <p className="text-lg font-medium">Mapa Interactivo</p>
-                  <p className="text-sm">Av. 9 de Octubre 123, Guayaquil</p>
-                </div>
-              </div>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127481.49115095168!2d-79.97440804956055!3d-2.1894128999816143!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x902d6d0b00d4b30b%3A0xe7bdc5de7b5ff4e1!2sGuayaquil%2C%20Ecuador!5e0!3m2!1sen!2sus!4v1635959999999!5m2!1sen!2sus"
+                width="100%"
+                height="400"
+                style={{border: 0}}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="rounded-lg"
+              ></iframe>
             </CardContent>
           </Card>
         </div>
