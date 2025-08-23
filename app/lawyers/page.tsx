@@ -19,8 +19,6 @@ import {
   User,
   Award,
   Briefcase,
-  Phone,
-  Mail,
   Globe,
   MessageSquare
 } from 'lucide-react';
@@ -309,6 +307,7 @@ export default function LawyersDirectoryPage() {
                           Ver Perfil
                         </Button>
                       </Link>
+                      {/* Contact buttons commented out to force platform usage
                       <Button variant="outline" size="icon" asChild>
                         <a href={`mailto:${lawyer.email}`}>
                           <Mail className="h-4 w-4" />
@@ -319,6 +318,7 @@ export default function LawyersDirectoryPage() {
                           <Phone className="h-4 w-4" />
                         </a>
                       </Button>
+                      */}
                     </div>
                   </CardContent>
                 </Card>

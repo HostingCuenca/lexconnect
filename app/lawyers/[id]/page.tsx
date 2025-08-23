@@ -505,78 +505,93 @@ export default function LawyerDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Lawyer Profile Card */}
-            <Card className="overflow-hidden">
-              {/* Header with gradient background */}
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white">
-                <div className="flex items-start space-x-6">
-                  {/* Avatar */}
-                  <div className="relative flex-shrink-0">
-                    <img
-                      src={getAvatarUrl(lawyer)}
-                      alt={`${lawyer.first_name} ${lawyer.last_name}`}
-                      className="w-32 h-32 rounded-full border-4 border-white/20 object-cover shadow-lg"
-                    />
-                    {lawyer.is_verified && (
-                      <div className="absolute -bottom-2 -right-2">
-                        <div className="bg-green-500 text-white p-2 rounded-full shadow-lg">
-                          <Award className="h-4 w-4" />
-                        </div>
+            <Card className="overflow-hidden shadow-xl">
+              {/* Header with premium gradient */}
+              <div className="bg-brand-gradient relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary/10"></div>
+                <div className="relative p-8 text-white">
+                  <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+                    {/* Avatar */}
+                    <div className="relative flex-shrink-0">
+                      <div className="w-40 h-40 rounded-full bg-gradient-to-br from-white/20 to-white/5 p-1">
+                        <img
+                          src={getAvatarUrl(lawyer)}
+                          alt={`${lawyer.first_name} ${lawyer.last_name}`}
+                          className="w-full h-full rounded-full object-cover"
+                        />
                       </div>
-                    )}
-                  </div>
-                  
-                  {/* Profile Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <h1 className="text-3xl font-bold text-white">
-                        {lawyer.first_name} {lawyer.last_name}
-                      </h1>
                       {lawyer.is_verified && (
-                        <Badge className="bg-green-500 text-white">
-                          <Award className="h-3 w-3 mr-1" />
-                          Verificado
-                        </Badge>
+                        <div className="absolute -bottom-2 -right-2">
+                          <div className="bg-secondary text-primary p-3 rounded-full shadow-lg ring-4 ring-white/20">
+                            <Award className="h-5 w-5" />
+                          </div>
+                        </div>
                       )}
                     </div>
                     
-                    {/* Specialties */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {lawyer.specialties.map((specialty) => (
-                        <Badge key={specialty.id} variant="secondary" className="bg-white/10 text-white border-white/20 hover:bg-white/20">
-                          {specialty.name}
-                        </Badge>
-                      ))}
-                    </div>
+                    {/* Profile Info */}
+                    <div className="flex-1 text-center md:text-left">
+                      <div className="mb-4">
+                        <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
+                          {lawyer.first_name} {lawyer.last_name}
+                        </h1>
+                        {lawyer.is_verified && (
+                          <div className="flex items-center justify-center md:justify-start space-x-2">
+                            <Badge className="bg-secondary text-primary px-4 py-1">
+                              <Award className="h-4 w-4 mr-2" />
+                              Abogado Verificado
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Specialties */}
+                      <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-6">
+                        {lawyer.specialties.map((specialty) => (
+                          <Badge key={specialty.id} variant="outline" className="bg-white/10 text-white border-white/30 hover:bg-white/20 px-3 py-1">
+                            {specialty.name}
+                          </Badge>
+                        ))}
+                      </div>
 
-                    {/* Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-blue-100">
-                      <div className="text-center">
-                        <div className="flex items-center justify-center space-x-1 mb-1">
-                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                          <span className="font-bold text-white text-lg">{Number(lawyer.rating).toFixed(1)}</span>
+                      {/* Stats Grid */}
+                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="text-center">
+                          <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="flex items-center justify-center mb-2">
+                              <Star className="h-6 w-6 text-secondary fill-current" />
+                            </div>
+                            <div className="text-2xl font-bold text-white">{Number(lawyer.rating).toFixed(1)}</div>
+                            <div className="text-white/80 text-sm">{lawyer.total_reviews} reseñas</div>
+                          </div>
                         </div>
-                        <span className="text-xs">{lawyer.total_reviews} reseñas</span>
-                      </div>
-                      <div className="text-center">
-                        <div className="flex items-center justify-center space-x-1 mb-1">
-                          <Users className="h-4 w-4" />
-                          <span className="font-bold text-white text-lg">{lawyer.total_consultations}</span>
+                        <div className="text-center">
+                          <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="flex items-center justify-center mb-2">
+                              <Users className="h-6 w-6 text-secondary" />
+                            </div>
+                            <div className="text-2xl font-bold text-white">{lawyer.total_consultations}</div>
+                            <div className="text-white/80 text-sm">Consultas</div>
+                          </div>
                         </div>
-                        <span className="text-xs">Consultas</span>
-                      </div>
-                      <div className="text-center">
-                        <div className="flex items-center justify-center space-x-1 mb-1">
-                          <Briefcase className="h-4 w-4" />
-                          <span className="font-bold text-white text-lg">{lawyer.years_experience}</span>
+                        <div className="text-center">
+                          <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="flex items-center justify-center mb-2">
+                              <Briefcase className="h-6 w-6 text-secondary" />
+                            </div>
+                            <div className="text-2xl font-bold text-white">{lawyer.years_experience}</div>
+                            <div className="text-white/80 text-sm">Años exp.</div>
+                          </div>
                         </div>
-                        <span className="text-xs">Años exp.</span>
-                      </div>
-                      <div className="text-center">
-                        <div className="flex items-center justify-center space-x-1 mb-1">
-                          <Globe className="h-4 w-4" />
-                          <span className="font-bold text-white text-lg">{lawyer.languages.split(',').length}</span>
+                        <div className="text-center">
+                          <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                            <div className="flex items-center justify-center mb-2">
+                              <Globe className="h-6 w-6 text-secondary" />
+                            </div>
+                            <div className="text-2xl font-bold text-white">{lawyer.languages.split(',').length}</div>
+                            <div className="text-white/80 text-sm">Idiomas</div>
+                          </div>
                         </div>
-                        <span className="text-xs">Idiomas</span>
                       </div>
                     </div>
                   </div>
