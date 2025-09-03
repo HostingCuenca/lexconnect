@@ -243,6 +243,7 @@ export default function ServicesPage() {
             email: clientEmail.trim(),
             phone: clientPhone.trim(),
             password: clientPassword,
+            confirmPassword: confirmPassword,
             role: 'cliente'
           })
         });
@@ -258,7 +259,9 @@ export default function ServicesPage() {
           throw new Error(registerResult.message || 'Error al crear la cuenta');
         }
         
-        token = registerResult.token;
+        token = registerResult.data.token;
+        // Save token to localStorage for future use
+        localStorage.setItem('token', token);
       } else {
         token = localStorage.getItem('token');
       }
@@ -346,7 +349,7 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
             <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4">
-              Servicios Legales 
+              Servicios Legales<br />
               <span className="text-secondary">Especializados</span>
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto font-sans">
