@@ -1,0 +1,9 @@
+{
+  "title": "Liquidación de Beneficios Sociales",
+  "description": "Cálculo y gestión de liquidación de beneficios sociales completa",
+  "price": 200.00,
+  "duration_minutes": 90,
+  "service_type": "liquidacion",
+  "requirements": "Evaluación previa necesaria para determinar beneficios correspondientes",
+  "deliverables": "Liquidación detallada de beneficios y gestión de cobro"
+}

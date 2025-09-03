@@ -1,0 +1,9 @@
+{
+  "title": "Defensa en Delitos contra la Propiedad",
+  "description": "Defensa técnica en procesos por delitos contra la propiedad (robo, hurto, estafa)",
+  "price": 1200.00,
+  "duration_minutes": 60,
+  "service_type": "defensa",
+  "requirements": "Evaluación previa necesaria para determinar estrategia de defensa",
+  "deliverables": "Defensa técnica integral y representación legal completa"
+}

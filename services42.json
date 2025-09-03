@@ -1,0 +1,9 @@
+{
+  "title": "Consultoría en Inversión Extranjera",
+  "description": "Asesoría especializada en inversión extranjera y regulaciones internacionales",
+  "price": 1500.00,
+  "duration_minutes": 150,
+  "service_type": "consultoria",
+  "requirements": "Evaluación previa necesaria para análisis de marco regulatorio",
+  "deliverables": "Estructura legal para inversión extranjera y cumplimiento normativo"
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Contratos de Arrendamiento",
+  "description": "Redacción y asesoría en contratos de arrendamiento inmobiliario",
+  "price": 150.00,
+  "duration_minutes": 60,
+  "service_type": "redaccion",
+  "requirements": "Evaluación previa necesaria para establecer términos del contrato",
+  "deliverables": "Contrato de arrendamiento completo con cláusulas de protección"
+}

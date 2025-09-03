@@ -1,0 +1,9 @@
+{
+  "title": "Divorcio por Mutuo Acuerdo",
+  "description": "Divorcio consensual con y sin hijos menores de edad",
+  "price": 250.00,
+  "duration_minutes": 60,
+  "service_type": "juicio",
+  "requirements": "Documentos del matrimonio y acuerdo de separación definido.",
+  "deliverables": "Sentencia de divorcio ejecutoriada"
+}

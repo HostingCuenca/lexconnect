@@ -1,0 +1,9 @@
+{
+  "title": "Compraventa de Bienes Inmuebles",
+  "description": "Asesoría legal integral en compraventa de propiedades inmobiliarias",
+  "price": 600.00,
+  "duration_minutes": 120,
+  "service_type": "transaccion",
+  "requirements": "Evaluación previa necesaria para revisión de documentos",
+  "deliverables": "Transacción inmobiliaria segura con garantías legales"
+}

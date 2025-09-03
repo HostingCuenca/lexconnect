@@ -1,0 +1,9 @@
+{
+  "title": "Juicio de Alimentos (Fijación/Aumento)",
+  "description": "Fijación, aumento o rebaja de pensión alimenticia",
+  "price": 500.00,
+  "duration_minutes": 60,
+  "service_type": "juicio",
+  "requirements": "Documentos que prueben ingresos y gastos. Evaluación previa.",
+  "deliverables": "Resolución de pensión alimenticia"
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Mediación y Resolución de Conflictos",
+  "description": "Servicios de mediación para resolución alternativa de disputas legales",
+  "price": 400.00,
+  "duration_minutes": 120,
+  "service_type": "mediacion",
+  "requirements": "Evaluación previa necesaria para viabilidad de mediación",
+  "deliverables": "Acuerdo de mediación y resolución pacífica del conflicto"
+}

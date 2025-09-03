@@ -1,0 +1,9 @@
+{
+  "title": "Registro de Derechos de Autor",
+  "description": "Registro de obras literarias, software, logos y creaciones intelectuales",
+  "price": 1750.00,
+  "duration_minutes": 60,
+  "service_type": "registro",
+  "requirements": "Obra original y documentación específica según tipo de creación.",
+  "deliverables": "Certificado de registro de derechos de autor"
+}

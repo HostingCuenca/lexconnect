@@ -1,0 +1,9 @@
+{
+  "title": "Prescripción Adquisitiva Extraordinaria (Usucapión)",
+  "description": "Juicio para adquirir dominio de bien inmueble por posesión",
+  "price": 1000.00,
+  "duration_minutes": 60,
+  "service_type": "juicio",
+  "requirements": "Evaluación de documentos de posesión. Contacte para análisis.",
+  "deliverables": "Sentencia de prescripción adquisitiva e inscripción en Registro"
+}

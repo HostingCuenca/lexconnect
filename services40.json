@@ -1,0 +1,9 @@
+{
+  "title": "Asesoría en Derecho Digital",
+  "description": "Asesoría legal especializada en tecnología, comercio electrónico y derecho digital",
+  "price": 450.00,
+  "duration_minutes": 90,
+  "service_type": "asesoria",
+  "requirements": "Evaluación previa necesaria para identificar aspectos legales digitales",
+  "deliverables": "Marco legal digital completo y políticas de cumplimiento"
+}

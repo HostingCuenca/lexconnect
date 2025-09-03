@@ -1,0 +1,9 @@
+{
+  "title": "Asesoría en Protección de Datos",
+  "description": "Asesoría especializada en cumplimiento de normativas de protección de datos",
+  "price": 350.00,
+  "duration_minutes": 90,
+  "service_type": "asesoria",
+  "requirements": "Evaluación previa necesaria para análisis de compliance",
+  "deliverables": "Plan de cumplimiento GDPR y políticas de privacidad"
+}

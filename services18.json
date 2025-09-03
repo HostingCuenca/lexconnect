@@ -1,0 +1,9 @@
+{
+  "title": "Asesoría en Derechos de Trabajador",
+  "description": "Asesoría integral sobre derechos laborales y beneficios sociales",
+  "price": 80.00,
+  "duration_minutes": 45,
+  "service_type": "asesoria",
+  "requirements": "Evaluación previa necesaria para identificar derechos vulnerados",
+  "deliverables": "Informe detallado de derechos laborales y plan de acción"
+}

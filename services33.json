@@ -1,0 +1,9 @@
+{
+  "title": "Trámites de Nacionalización",
+  "description": "Asesoría y trámites para procesos de nacionalización ecuatoriana",
+  "price": 600.00,
+  "duration_minutes": 120,
+  "service_type": "tramite",
+  "requirements": "Evaluación previa necesaria para verificar requisitos",
+  "deliverables": "Trámite de nacionalización completo y carta de naturalización"
+}

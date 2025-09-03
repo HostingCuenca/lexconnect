@@ -1,0 +1,9 @@
+{
+  "title": "Contratos Civiles (Compraventa, Arrendamiento)",
+  "description": "Elaboración de contratos civiles de compraventa, arrendamiento, comodato",
+  "price": 100.00,
+  "duration_minutes": 60,
+  "service_type": "contrato",
+  "requirements": "Datos de las partes y objeto del contrato. Consulta previa.",
+  "deliverables": "Contrato civil legalizado y registrado si corresponde"
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Asesoría en Startups y Emprendimiento",
+  "description": "Asesoría legal integral para startups y nuevos emprendimientos",
+  "price": 600.00,
+  "duration_minutes": 120,
+  "service_type": "asesoria",
+  "requirements": "Evaluación previa necesaria para estructuración legal del negocio",
+  "deliverables": "Estructura legal completa para startup y documentación corporativa"
+}

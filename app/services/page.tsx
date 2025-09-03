@@ -55,14 +55,35 @@ interface LegalSpecialty {
   icon: string;
 }
 
+interface Service {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  duration_minutes: number;
+  service_type: string;
+  requirements: string;
+  deliverables: string;
+  status: string;
+  created_at: string;
+  lawyer: {
+    id: string;
+    name: string;
+    years_experience: number;
+    rating: string;
+    total_reviews: number;
+    specialties: string[];
+  };
+}
+
 export default function ServicesPage() {
-  const [lawyers, setLawyers] = useState<LawyerProfile[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [specialties, setSpecialties] = useState<LegalSpecialty[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState('all');
 
-  // Fetch lawyers and specialties
+  // Fetch services and specialties
   useEffect(() => {
     fetchData();
   }, []);
@@ -71,15 +92,15 @@ export default function ServicesPage() {
     try {
       setLoading(true);
       
-      // Fetch lawyers and specialties in parallel
-      const [lawyersResponse, specialtiesResponse] = await Promise.all([
-        fetch('/api/lawyers/'),
+      // Fetch services and specialties in parallel
+      const [servicesResponse, specialtiesResponse] = await Promise.all([
+        fetch('/api/services/public/'),
         fetch('/api/legal-specialties/')
       ]);
 
-      if (lawyersResponse.ok) {
-        const lawyersData = await lawyersResponse.json();
-        setLawyers(lawyersData.data || []);
+      if (servicesResponse.ok) {
+        const servicesData = await servicesResponse.json();
+        setServices(servicesData.data || []);
       }
 
       if (specialtiesResponse.ok) {
@@ -93,32 +114,38 @@ export default function ServicesPage() {
     }
   };
 
-  // Search lawyers
-  const searchLawyers = async () => {
+  // Search services
+  const searchServices = async () => {
     try {
       setLoading(true);
       
       const params = new URLSearchParams();
       if (searchTerm) params.append('search', searchTerm);
-      if (selectedSpecialty && selectedSpecialty !== 'all') params.append('specialty', selectedSpecialty);
+      if (selectedSpecialty && selectedSpecialty !== 'all') params.append('category', selectedSpecialty);
       
-      const response = await fetch(`/api/lawyers/?${params.toString()}`);
+      const response = await fetch(`/api/services/public/?${params.toString()}`);
       if (response.ok) {
         const data = await response.json();
-        setLawyers(data.data || []);
+        setServices(data.data || []);
       }
     } catch (error) {
-      console.error('Error searching lawyers:', error);
+      console.error('Error searching services:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Get main service for display
-  const getMainService = (services: LawyerService[]) => {
-    return services.find(s => s.service_type === 'consultation') || services[0];
-  };
-
+  // Filter services based on search term and specialty
+  const filteredServices = services.filter(service => {
+    const matchesSearch = !searchTerm || 
+      service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      service.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesSpecialty = selectedSpecialty === 'all' || 
+      service.lawyer.specialties.some(specialty => specialty.toLowerCase().includes(selectedSpecialty.toLowerCase()));
+    
+    return matchesSearch && matchesSpecialty;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -134,7 +161,7 @@ export default function ServicesPage() {
               <span className="text-secondary">Especializados</span>
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto font-sans">
-              Encuentra el abogado perfecto para tu caso. {lawyers.length} especialistas verificados disponibles.
+              Descubre nuestros {services.length} servicios legales especializados con precios transparentes.
             </p>
           </div>
         </div>
@@ -147,11 +174,11 @@ export default function ServicesPage() {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Buscar abogados por nombre o especialidad..."
+                placeholder="Buscar servicios legales..."
                 className="pl-10"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && searchLawyers()}
+                onKeyDown={(e) => e.key === 'Enter' && searchServices()}
               />
             </div>
             <div className="flex gap-4">
@@ -168,7 +195,7 @@ export default function ServicesPage() {
                   ))}
                 </SelectContent>
               </Select>
-              <Button onClick={searchLawyers} disabled={loading}>
+              <Button onClick={searchServices} disabled={loading}>
                 <Filter className="h-4 w-4 mr-2" />
                 Buscar
               </Button>
@@ -183,100 +210,82 @@ export default function ServicesPage() {
           {loading ? (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Cargando abogados...</p>
+              <p className="mt-4 text-gray-600">Cargando servicios legales...</p>
             </div>
-          ) : lawyers.length === 0 ? (
+          ) : filteredServices.length === 0 ? (
             <div className="text-center py-12">
               <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                 <User className="h-12 w-12 text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron abogados</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron servicios</h3>
               <p className="text-gray-600">Intenta ajustar tus filtros de búsqueda</p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {lawyers.map((lawyer) => {
-                const mainService = getMainService(lawyer.services);
-                if (!mainService) return null;
-
-                return (
-                  <Card key={lawyer.id} className="h-full hover:shadow-lg transition-all duration-300 group">
-                    <CardHeader>
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center space-x-2">
-                          {lawyer.specialties.map((specialty) => (
-                            <Badge key={specialty.id} variant="outline" className="text-xs">
-                              {specialty.name}
-                            </Badge>
-                          ))}
-                        </div>
-                        {lawyer.is_verified && (
-                          <Badge className="bg-green-100 text-green-800 text-xs">
-                            <Award className="h-3 w-3 mr-1" />
-                            Verificado
-                          </Badge>
-                        )}
+              {filteredServices.map((service) => (
+                <Card key={service.id} className="h-full hover:shadow-lg transition-all duration-300 group">
+                  <CardHeader>
+                    <div className="flex justify-between items-start mb-2">
+                      <Badge variant="outline" className="text-xs">
+                        {service.service_type}
+                      </Badge>
+                      <div className="text-2xl font-bold text-green-600">
+                        ${Number(service.price).toFixed(0)} + IVA
                       </div>
-                      
-                      <CardTitle className="text-xl group-hover:text-blue-700 transition-colors">
-                        {mainService.title}
-                      </CardTitle>
-                      <CardDescription className="text-gray-600">
-                        {mainService.description}
-                      </CardDescription>
-                    </CardHeader>
+                    </div>
                     
-                    <CardContent className="space-y-4">
-                      {/* Lawyer Info */}
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {lawyer.first_name} {lawyer.last_name}
-                          </p>
-                          <div className="flex items-center space-x-4 text-sm text-gray-500">
-                            <span>{lawyer.years_experience} años exp.</span>
-                            <span>•</span>
-                            <span>{lawyer.languages}</span>
+                    <CardTitle className="text-xl group-hover:text-blue-700 transition-colors">
+                      {service.title}
+                    </CardTitle>
+                    <CardDescription className="text-gray-600">
+                      {service.description}
+                    </CardDescription>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-4">
+                    {/* Service Details */}
+                    <div className="space-y-3 text-sm">
+                      {service.requirements && (
+                        <div className="bg-blue-50 p-3 rounded-lg">
+                          <p className="font-medium text-blue-800 mb-1">Requisitos:</p>
+                          <p className="text-blue-700">{service.requirements}</p>
+                        </div>
+                      )}
+                      {service.deliverables && (
+                        <div className="bg-green-50 p-3 rounded-lg">
+                          <p className="font-medium text-green-800 mb-1">Entregables:</p>
+                          <p className="text-green-700">{service.deliverables}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Lawyer Info */}
+                    <div className="flex items-center justify-between pt-3 border-t">
+                      <div>
+                        <p className="font-medium text-gray-900 text-sm">
+                          {service.lawyer.name}
+                        </p>
+                        <div className="flex items-center space-x-2 text-xs text-gray-500">
+                          <span>{service.lawyer.years_experience} años exp.</span>
+                          <span>•</span>
+                          <div className="flex items-center space-x-1">
+                            <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                            <span>{Number(service.lawyer.rating || 0).toFixed(1)}</span>
                           </div>
                         </div>
                       </div>
-
-                      {/* Rating and Reviews */}
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                          <span className="font-medium">{Number(lawyer.rating || 0).toFixed(1)}</span>
-                          <span className="text-gray-500">({lawyer.total_reviews} reseñas)</span>
-                        </div>
-                        <div className="flex items-center space-x-1 text-gray-500">
-                          <Clock className="h-4 w-4" />
-                          <span>{mainService.duration_minutes} min</span>
-                        </div>
-                      </div>
-
-                      {/* Location */}
-                      <div className="flex items-center space-x-1 text-sm text-gray-500">
-                        <MapPin className="h-3 w-3" />
-                        <span className="truncate">{lawyer.office_address}</span>
-                      </div>
-                      
-                      {/* Price and Action */}
-                      <div className="flex justify-between items-center pt-4 border-t">
-                        <div className="flex items-center space-x-1 text-2xl font-bold text-green-600">
-                          <DollarSign className="h-6 w-6" />
-                          <span>{Number(mainService.price).toFixed(0)}</span>
-                        </div>
-                        <Button 
-                          className="group-hover:bg-blue-700"
-                          onClick={() => window.location.href = `/lawyers/${lawyer.id}`}
-                        >
-                          Ver Perfil
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                    </div>
+                    
+                    {/* Action Button */}
+                    <Button 
+                      className="w-full group-hover:bg-blue-700"
+                      onClick={() => window.location.href = `/lawyers/${service.lawyer.id}`}
+                    >
+                      Solicitar Servicio
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
         </div>

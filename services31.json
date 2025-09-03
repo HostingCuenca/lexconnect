@@ -1,0 +1,9 @@
+{
+  "title": "Reclamaciones contra Bancos y Seguros",
+  "description": "Representación en reclamaciones contra instituciones financieras y aseguradoras",
+  "price": 500.00,
+  "duration_minutes": 90,
+  "service_type": "reclamacion",
+  "requirements": "Evaluación previa necesaria para análisis de documentación",
+  "deliverables": "Reclamación exitosa y recuperación de derechos financieros"
+}

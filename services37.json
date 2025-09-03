@@ -1,0 +1,9 @@
+{
+  "title": "Elaboración de Testamentos",
+  "description": "Redacción y formalización de testamentos con asesoría legal integral",
+  "price": 300.00,
+  "duration_minutes": 90,
+  "service_type": "testamento",
+  "requirements": "Evaluación previa necesaria para distribución de bienes",
+  "deliverables": "Testamento legalizado con protocolo notarial completo"
+}

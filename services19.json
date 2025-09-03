@@ -1,0 +1,9 @@
+{
+  "title": "Redacción de Contratos Laborales",
+  "description": "Elaboración y revisión de contratos de trabajo especializados",
+  "price": 120.00,
+  "duration_minutes": 60,
+  "service_type": "redaccion",
+  "requirements": "Evaluación previa necesaria para establecer términos específicos",
+  "deliverables": "Contrato laboral completo y asesoría sobre cláusulas especiales"
+}

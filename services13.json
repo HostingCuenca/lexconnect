@@ -1,0 +1,9 @@
+{
+  "title": "Impugnación de Multas de Tránsito",
+  "description": "Impugnación administrativa de multas de tránsito",
+  "price": 30.00,
+  "duration_minutes": 30,
+  "service_type": "impugnacion",
+  "requirements": "Citación de multa y documentos del vehículo. Proceso rápido.",
+  "deliverables": "Recurso de impugnación presentado y seguimiento"
+}

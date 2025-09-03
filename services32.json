@@ -1,0 +1,9 @@
+{
+  "title": "Recursos Administrativos",
+  "description": "Interposición de recursos administrativos ante entidades públicas",
+  "price": 250.00,
+  "duration_minutes": 60,
+  "service_type": "recurso",
+  "requirements": "Evaluación previa necesaria para análisis de acto administrativo",
+  "deliverables": "Recurso administrativo presentado y seguimiento procesal"
+}

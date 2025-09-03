@@ -1,0 +1,9 @@
+{
+  "title": "Asesoría en Planificación Tributaria",
+  "description": "Asesoría especializada en optimización y planificación fiscal empresarial",
+  "price": 500.00,
+  "duration_minutes": 120,
+  "service_type": "asesoria",
+  "requirements": "Evaluación previa necesaria para análisis de situación fiscal",
+  "deliverables": "Plan de optimización tributaria y cumplimiento fiscal"
+}

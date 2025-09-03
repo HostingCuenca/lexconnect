@@ -690,14 +690,13 @@ export default function LawyerDetailPage() {
                           
                           {/* Service details */}
                           <div className="flex items-center space-x-6 mb-4">
-                            <div className="flex items-center space-x-2 text-gray-500">
+                            {/* <div className="flex items-center space-x-2 text-gray-500">
                               <Clock className="h-4 w-4" />
                               <span className="font-medium">{service.duration_minutes} minutos</span>
-                            </div>
+                            </div> */}
                             <div className="flex items-center space-x-1">
-                              <DollarSign className="h-5 w-5 text-green-600" />
                               <span className="text-2xl font-bold text-green-600">
-                                ${Number(service.price).toFixed(0)}
+                                ${Number(service.price).toFixed(0)} + IVA
                               </span>
                             </div>
                           </div>
@@ -832,11 +831,11 @@ export default function LawyerDetailPage() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tarifa por hora</span>
-                  <span className="font-medium">${Number(lawyer.hourly_rate).toFixed(0)}</span>
+                  <span className="font-medium">${Number(lawyer.hourly_rate).toFixed(0)} + IVA</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Consulta</span>
-                  <span className="font-medium">${Number(lawyer.consultation_rate).toFixed(0)}</span>
+                  <span className="font-medium">${Number(lawyer.consultation_rate).toFixed(0)} + IVA</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Experiencia</span>
@@ -894,13 +893,12 @@ export default function LawyerDetailPage() {
                 <h4 className="font-semibold text-blue-900 mb-2">{selectedService.title}</h4>
                 <p className="text-blue-700 mb-3">{selectedService.description}</p>
                 <div className="flex items-center space-x-6 text-sm text-blue-600">
-                  <div className="flex items-center space-x-1">
+                  {/* <div className="flex items-center space-x-1">
                     <Clock className="h-4 w-4" />
                     <span className="font-medium">{selectedService.duration_minutes} minutos</span>
-                  </div>
+                  </div> */}
                   <div className="flex items-center space-x-1">
-                    <DollarSign className="h-4 w-4" />
-                    <span className="font-bold text-lg">${Number(selectedService.price).toFixed(0)}</span>
+                    <span className="font-bold text-lg">${Number(selectedService.price).toFixed(0)} + IVA</span>
                   </div>
                 </div>
               </div>
