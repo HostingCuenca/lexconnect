@@ -34,7 +34,7 @@ const getNavigationItems = (userRole: string) => {
       { href: '/dashboard/users', label: 'Usuarios', icon: Users },
       { href: '/dashboard/consultations', label: 'Todas las Consultas', icon: Shield },
       { href: '/dashboard/blog', label: 'Blog', icon: BookOpen },
-      { href: '/dashboard/ecommerce', label: 'E-commerce', icon: ShoppingCart },
+      // { href: '/dashboard/ecommerce', label: 'E-commerce', icon: ShoppingCart }, // Comentado temporalmente - habilitar más tarde
       { href: '/dashboard/settings', label: 'Configuración', icon: Settings },
     ];
   }
