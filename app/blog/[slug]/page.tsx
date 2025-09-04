@@ -17,6 +17,9 @@ import {
   Tag
 } from 'lucide-react';
 
+// ISR: Revalida cada 5 minutos para balance entre performance y frescura de datos
+export const revalidate = 300; // 5 minutos
+
 // Related Articles Component
 async function RelatedArticles({ currentPost }: { currentPost: BlogPost }) {
   try {

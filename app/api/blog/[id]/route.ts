@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getBlogPostBySlug, getBlogPostById, updateBlogPost, deleteBlogPost, publishBlogPost } from '@/lib/blog';
 import { getAuthenticatedUser } from '@/lib/auth';
 
@@ -87,6 +88,11 @@ export async function PUT(
       );
     }
 
+    // Revalidar páginas del blog para actualización inmediata
+    revalidatePath('/blog');
+    revalidatePath(`/blog/${updatedPost.slug}`);
+    revalidatePath('/blog/[slug]', 'page');
+
     return NextResponse.json({
       success: true,
       data: updatedPost,
@@ -125,6 +131,10 @@ export async function DELETE(
         { status: 404 }
       );
     }
+
+    // Revalidar páginas del blog para actualización inmediata
+    revalidatePath('/blog');
+    revalidatePath('/blog/[slug]', 'page');
 
     return NextResponse.json({
       success: true,
@@ -166,6 +176,11 @@ export async function PATCH(
           { status: 404 }
         );
       }
+
+      // Revalidar páginas del blog para actualización inmediata
+      revalidatePath('/blog');
+      revalidatePath(`/blog/${publishedPost.slug}`);
+      revalidatePath('/blog/[slug]', 'page');
 
       return NextResponse.json({
         success: true,

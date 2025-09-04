@@ -2,6 +2,9 @@ import { getPublishedBlogPosts } from '@/lib/blog';
 import { BLOG_CATEGORIES } from '@/lib/blog-types';
 import BlogClient from '@/components/BlogClient';
 
+// ISR: Revalida cada 5 minutos para balance entre performance y frescura de datos
+export const revalidate = 300; // 5 minutos
+
 // Server-side page to fetch blog posts from PostgreSQL
 export default async function BlogPage() {
   try {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getAllBlogPosts, getPublishedBlogPosts, createBlogPost, searchBlogPosts, getBlogPostsByAuthor } from '@/lib/blog';
 import { getAuthenticatedUser } from '@/lib/auth';
 
@@ -99,6 +100,10 @@ export async function POST(request: NextRequest) {
     }
     
     const newPost = await createBlogPost(data, user.userId);
+    
+    // Revalidar páginas del blog para actualización inmediata
+    revalidatePath('/blog');
+    revalidatePath('/blog/[slug]', 'page');
     
     return NextResponse.json({
       success: true,
