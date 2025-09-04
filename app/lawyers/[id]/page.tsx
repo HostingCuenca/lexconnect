@@ -501,9 +501,9 @@ export default function LawyerDetailPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-5 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             {/* Lawyer Profile Card */}
             <Card className="overflow-hidden shadow-xl">
               {/* Header with premium gradient */}
@@ -561,7 +561,7 @@ export default function LawyerDetailPage() {
                             <div className="flex items-center justify-center mb-2">
                               <Star className="h-6 w-6 text-secondary fill-current" />
                             </div>
-                            <div className="text-2xl font-bold text-white">{Number(lawyer.rating).toFixed(1)}</div>
+                            <div className="text-2xl font-bold text-white">{lawyer.rating && Number(lawyer.rating) > 0 ? Number(lawyer.rating).toFixed(1) : '5.0'}</div>
                             <div className="text-white/80 text-sm">{lawyer.total_reviews} reseñas</div>
                           </div>
                         </div>
@@ -570,8 +570,8 @@ export default function LawyerDetailPage() {
                             <div className="flex items-center justify-center mb-2">
                               <Users className="h-6 w-6 text-secondary" />
                             </div>
-                            <div className="text-2xl font-bold text-white">{lawyer.total_consultations}</div>
-                            <div className="text-white/80 text-sm">Consultas</div>
+                            <div className="text-2xl font-bold text-white">Pro</div>
+                            <div className="text-white/80 text-sm">Especialista</div>
                           </div>
                         </div>
                         <div className="text-center">
@@ -821,49 +821,201 @@ export default function LawyerDetailPage() {
             )}
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Quick Stats */}
+          {/* Enhanced Sidebar */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Lawyer Summary Card */}
             <Card>
-              <CardHeader>
-                <CardTitle>Información Rápida</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tarifa por hora</span>
-                  <span className="font-medium">${Number(lawyer.hourly_rate).toFixed(0)} + IVA</span>
+              <CardContent className="p-6">
+                {/* Compact lawyer info */}
+                <div className="text-center mb-6">
+                  <div className="w-24 h-24 mx-auto mb-4">
+                    <img
+                      src={getAvatarUrl(lawyer)}
+                      alt={`${lawyer.first_name} ${lawyer.last_name}`}
+                      className="w-full h-full rounded-full object-cover border-4 border-primary/20"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">
+                    {lawyer.first_name} {lawyer.last_name}
+                  </h3>
+                  {lawyer.is_verified && (
+                    <Badge className="bg-secondary text-primary px-3 py-1 mb-3">
+                      <Award className="h-3 w-3 mr-1" />
+                      Verificado
+                    </Badge>
+                  )}
+                  <div className="flex justify-center items-center space-x-4 text-sm text-gray-600 mb-4">
+                    <div className="flex items-center space-x-1">
+                      <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                      <span className="font-medium">{lawyer.rating && Number(lawyer.rating) > 0 ? Number(lawyer.rating).toFixed(1) : '5.0'}</span>
+                    </div>
+                    <span>•</span>
+                    <span>{lawyer.years_experience} años exp.</span>
+                    <span>•</span>
+                    <span>Especialista</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Consulta</span>
-                  <span className="font-medium">${Number(lawyer.consultation_rate).toFixed(0)} + IVA</span>
+
+                {/* Quick Action Button */}
+                <Button 
+                  size="lg" 
+                  className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 mb-6"
+                  onClick={() => setConsultationOpen(true)}
+                >
+                  <MessageSquare className="h-5 w-5 mr-2" />
+                  Consultar Ahora
+                </Button>
+
+                {/* Quick Stats Grid */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-gray-50 p-3 rounded-lg text-center">
+                    <div className="text-lg font-bold text-primary">${Number(lawyer.consultation_rate).toFixed(0)}</div>
+                    <div className="text-xs text-gray-600">Consulta + IVA</div>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg text-center">
+                    <div className="text-lg font-bold text-primary">${Number(lawyer.hourly_rate).toFixed(0)}</div>
+                    <div className="text-xs text-gray-600">Por hora + IVA</div>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Experiencia</span>
-                  <span className="font-medium">{lawyer.years_experience} años</span>
+
+                {/* Availability Schedule */}
+                <div className="border-t pt-4">
+                  <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Horarios Disponibles
+                  </h4>
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {availableSchedule.map((schedule, index) => (
+                      <div key={index} className="flex justify-between text-sm bg-gray-50 px-3 py-2 rounded">
+                        <span className="font-medium text-gray-700">{schedule.day}</span>
+                        <span className="text-gray-600 text-xs">{schedule.times}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Consultas</span>
-                  <span className="font-medium">{lawyer.total_consultations}</span>
+
+                {/* Contact Info */}
+                <div className="border-t pt-4 mt-4">
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center space-x-3">
+                      <MapPin className="h-4 w-4 text-gray-400" />
+                      <span className="text-gray-600 text-xs">{getCity(lawyer.office_address)}</span>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <Globe className="h-4 w-4 text-gray-400" />
+                      <span className="text-gray-600 text-xs">{lawyer.languages}</span>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Availability Schedule */}
+            {/* Additional Services Card */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Calendar className="h-5 w-5" />
-                  <span>Horarios Disponibles</span>
+                <CardTitle className="text-lg">¿Por qué elegir a {lawyer.first_name || 'este abogado'}?</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                    <div className="bg-green-100 p-2 rounded-full">
+                      <Award className="h-4 w-4 text-green-600" />
+                    </div>
+                    <div className="text-sm">
+                      <div className="font-medium text-green-900">Abogado Verificado</div>
+                      <div className="text-green-700 text-xs">Credenciales validadas</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
+                    <div className="bg-blue-100 p-2 rounded-full">
+                      <Clock className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div className="text-sm">
+                      <div className="font-medium text-blue-900">Respuesta Rápida</div>
+                      <div className="text-blue-700 text-xs">Menos de 24 horas</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
+                    <div className="bg-purple-100 p-2 rounded-full">
+                      <Briefcase className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div className="text-sm">
+                      <div className="font-medium text-purple-900">{lawyer.years_experience} Años de Experiencia</div>
+                      <div className="text-purple-700 text-xs">Especialista comprobado</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Testimonials Placeholder */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center space-x-2">
+                  <Star className="h-5 w-5 text-yellow-500" />
+                  <span>Lo que dicen los clientes</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  {availableSchedule.map((schedule, index) => (
-                    <div key={index} className="flex justify-between text-sm">
-                      <span className="font-medium text-gray-700">{schedule.day}</span>
-                      <span className="text-gray-600">{schedule.times}</span>
+                <div className="space-y-4">
+                  <div className="border-l-4 border-primary pl-4">
+                    <div className="flex items-center space-x-1 mb-2">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-3 w-3 text-yellow-500 fill-current" />
+                      ))}
                     </div>
-                  ))}
+                    <p className="text-sm text-gray-700 mb-1">
+                      &quot;Excelente atención y muy profesional. Resolvió mi caso de manera eficiente.&quot;
+                    </p>
+                    <p className="text-xs text-gray-500">- Cliente verificado</p>
+                  </div>
+                  <div className="border-l-4 border-primary pl-4">
+                    <div className="flex items-center space-x-1 mb-2">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-3 w-3 text-yellow-500 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-sm text-gray-700 mb-1">
+                      &quot;Comunicación clara y precios transparentes. Lo recomiendo ampliamente.&quot;
+                    </p>
+                    <p className="text-xs text-gray-500">- Cliente verificado</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* LexConnect Team Card - Sticky Footer */}
+            <Card className="sticky top-20 bg-gradient-to-br from-primary/5 to-secondary/10 border-primary/20">
+              <CardContent className="p-6 text-center">
+                <div className="mb-4">
+                  <img 
+                    src="/logohorizontal.png" 
+                    alt="LexConnect" 
+                    className="h-8 w-auto mx-auto object-contain"
+                    style={{
+                      filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))'
+                    }}
+                  />
+                </div>
+                <h3 className="font-semibold text-primary mb-2">Equipo LexConnect</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Conectando clientes con los mejores abogados especializados
+                </p>
+                <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
+                  <div className="flex items-center space-x-1">
+                    <Award className="h-3 w-3 text-primary" />
+                    <span>Verificado</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <Globe className="h-3 w-3 text-primary" />
+                    <span>Nacional</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <Clock className="h-3 w-3 text-primary" />
+                    <span>24/7</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>

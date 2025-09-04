@@ -25,9 +25,14 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="font-display text-3xl text-primary font-bold tracking-tight hover:text-secondary transition-colors">
-                LexConnect
-              </span>
+              <img 
+                src="/logohorizontal.png" 
+                alt="LexConnect" 
+                className="h-10 w-auto object-contain bg-transparent"
+                style={{
+                  filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))'
+                }}
+              />
             </Link>
           </div>
 
