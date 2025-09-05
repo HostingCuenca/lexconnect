@@ -991,9 +991,9 @@ export default function LawyerDetailPage() {
               <CardContent className="p-6 text-center">
                 <div className="mb-4">
                   <img 
-                    src="/logohorizontal.png" 
+                    src="/logohorizontal.png"
                     alt="LexConnect" 
-                    className="h-8 w-auto mx-auto object-contain"
+                    className="h-10 w-auto max-w-[160px] mx-auto object-contain"
                     style={{
                       filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))'
                     }}

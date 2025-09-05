@@ -26,9 +26,9 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <img 
-                src="/logohorizontal.png" 
-                alt="LexConnect" 
-                className="h-10 w-auto object-contain bg-transparent"
+                src="/logohorizontal.png"
+                alt="LexConnect"
+                className="w-48 h-auto object-contain bg-transparent"
                 style={{
                   filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))'
                 }}

@@ -98,7 +98,8 @@ export default function LoginPage() {
               </Button>
             </form>
 
-            {/* Development: Admin credentials */}
+            {/* Development: Admin credentials - COMMENTED OUT FOR PRODUCTION */}
+            {/* 
             <div className="mt-4 p-3 bg-gray-50 rounded-lg border">
               <p className="text-xs font-medium text-gray-700 mb-2">Credenciales de desarrollo:</p>
               <div className="space-y-2">
@@ -121,6 +122,7 @@ export default function LoginPage() {
                 </div>
               </div>
             </div>
+            */}
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">

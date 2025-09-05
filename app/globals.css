@@ -23,24 +23,24 @@
   :root {
     /* LexConnect Brand Colors - Light Mode - Premium Legal Theme */
     --background: 0 0% 100%;
-    --foreground: 215 35% 12%; /* Darker for premium feel */
+    --foreground: 185 25% 15%; /* Darker aqua for premium feel */
     --card: 0 0% 100%;
-    --card-foreground: 215 35% 12%;
+    --card-foreground: 185 25% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 215 35% 12%;
-    --primary: 215 60% 12%; /* Dark navy - premium legal */
+    --popover-foreground: 185 25% 15%;
+    --primary: 185 85% 35%; /* Aqua blue - modern legal */
     --primary-foreground: 0 0% 98%;
     --secondary: 43 88% 58%; /* Refined gold */
-    --secondary-foreground: 215 60% 12%;
+    --secondary-foreground: 185 85% 35%;
     --muted: 215 25% 95%;
     --muted-foreground: 215 20% 45%;
     --accent: 43 88% 58%; /* Gold as accent, no purple */
-    --accent-foreground: 215 60% 12%;
+    --accent-foreground: 185 85% 35%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 215 25% 89%;
     --input: 215 25% 89%;
-    --ring: 215 60% 12%;
+    --ring: 185 85% 35%;
     --chart-1: 215 60% 25%;
     --chart-2: 43 88% 48%;
     --chart-3: 215 40% 35%;
@@ -58,13 +58,13 @@
     --popover: 215 50% 12%;
     --popover-foreground: 0 0% 98%;
     --primary: 43 88% 58%; /* Gold becomes primary in dark */
-    --primary-foreground: 215 60% 12%;
+    --primary-foreground: 185 85% 35%;
     --secondary: 215 40% 25%;
     --secondary-foreground: 0 0% 98%;
     --muted: 215 40% 18%;
     --muted-foreground: 215 20% 65%;
     --accent: 43 88% 65%; /* Gold accent, no purple */
-    --accent-foreground: 215 60% 12%;
+    --accent-foreground: 185 85% 35%;
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 98%;
     --border: 215 40% 20%;
